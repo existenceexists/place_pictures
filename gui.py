@@ -49,7 +49,7 @@ class Gui:
     self.menu_file_and_zoom=MenuSystem.MenuSystem.Menu('No picture selected    ',())
     self.label_file_and_zoom=MenuSystem.MenuSystem.MenuChoice()
     self.widgets_container.append(self.label_file_and_zoom)
-    self.label_file_and_zoom.set(self.menu_file_and_zoom,(10,30))
+    self.label_file_and_zoom.set(self.menu_file_and_zoom,(460,30))
     
   def update(self, event):
     
