@@ -4,6 +4,9 @@ import pygame
 
 import MenuSystem
 
+import label
+
+
 class Gui:
   
   def __init__(self,game):
@@ -24,16 +27,29 @@ class Gui:
     MenuSystem.MenuSystem.BORDER_HL = pygame.Color(200,200,200,180)
     
     #~ création des menus
-    self.menu_game = MenuSystem.MenuSystem.Menu('game', ('save','load','exit'))
+    self.menu_game = MenuSystem.MenuSystem.Menu('game', ('save','load','new','exit'))
     self.menu_picture = MenuSystem.MenuSystem.Menu('picture', ('open file','zoom','move to layer'))
     self.menu_layer = MenuSystem.MenuSystem.Menu('layer', ('show list','new','move','join','delete empty'))
     self.menu_select = MenuSystem.MenuSystem.Menu('select',('same file and zoom','same file'))
-    self.menu_map = MenuSystem.MenuSystem.Menu('map',('zoom',))
+    self.menu_map = MenuSystem.MenuSystem.Menu('map',('zoom with pictures ','zoom without pictures','open file'))
     
     #~ création de la barre
     self.bar = MenuSystem.MenuSystem.MenuBar()
     self.widgets_container.append(self.bar)
     self.bar.set((self.menu_game,self.menu_picture,self.menu_layer,self.menu_select,self.menu_map))
+    
+    self.label_selected_pictures_count=label.Label('0',(200,200,200,255),(80,80,80,80))
+    self.label_selected_pictures_count.set_topright_position((180,30))
+    self.widgets_container.append(self.label_selected_pictures_count)
+    self.label_selected_picture_types_count=label.Label('0',(200,200,200,255),(80,80,80,80))
+    self.label_selected_picture_types_count.set_topright_position((280,30))
+    self.widgets_container.append(self.label_selected_picture_types_count)
+    
+    # We add 4 spaces at the end of the string 'No picture selected' because there is a bug in MenuSystem software that cuts 2 ending letters of the string.
+    self.menu_file_and_zoom=MenuSystem.MenuSystem.Menu('No picture selected    ',())
+    self.label_file_and_zoom=MenuSystem.MenuSystem.MenuChoice()
+    self.widgets_container.append(self.label_file_and_zoom)
+    self.label_file_and_zoom.set(self.menu_file_and_zoom,(350,30))
     
   def update(self, event):
     
@@ -45,7 +61,8 @@ class Gui:
         
         if widget==self.bar:
           if self.bar.choice:
-            if self.bar.choice_index==(0,2):
+            if self.bar.choice_index==(0,3):
               self.game.running=False
     
     return ret
+    
