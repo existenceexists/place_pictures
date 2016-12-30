@@ -30,13 +30,13 @@ class Gui:
     self.menu_game = MenuSystem.MenuSystem.Menu('game', ('save','load','new','exit'))
     self.menu_picture = MenuSystem.MenuSystem.Menu('picture', ('open file','zoom','move to layer'))
     self.menu_layer = MenuSystem.MenuSystem.Menu('layer', ('show list','new','move','join','delete empty'))
-    self.menu_select = MenuSystem.MenuSystem.Menu('select',('same file and zoom','same file'))
+    self.menu_select = MenuSystem.MenuSystem.Menu('select',('same file and zoom','same file','all on screen','all'))
     self.menu_map = MenuSystem.MenuSystem.Menu('map',('zoom with pictures ','zoom without pictures','open file'))
     
     #~ création de la barre
     self.bar = MenuSystem.MenuSystem.MenuBar()
     self.widgets_container.append(self.bar)
-    self.bar.set((self.menu_game,self.menu_picture,self.menu_layer,self.menu_select,self.menu_map))
+    self.bar.set((self.menu_game,self.menu_map,self.menu_layer,self.menu_picture,self.menu_select))
     
     self.label_selected_pictures_count=label.Label('pictures:  0',(200,200,200,255),(80,80,80,80))
     self.label_selected_pictures_count.set_topright_position((990,60))
