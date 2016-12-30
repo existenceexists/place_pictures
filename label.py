@@ -16,7 +16,6 @@ class Label(pygame.sprite.Sprite):
     else:
       self.image=font.render(text,True,pygame.Color(*color),pygame.Color(*background_color))
     self.rect=self.image.get_rect()
-    self.update()
     
   def set_topleft_position(self, position):
     self.rect.topleft=position

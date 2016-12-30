@@ -38,11 +38,11 @@ class Gui:
     self.widgets_container.append(self.bar)
     self.bar.set((self.menu_game,self.menu_picture,self.menu_layer,self.menu_select,self.menu_map))
     
-    self.label_selected_pictures_count=label.Label('0',(200,200,200,255),(80,80,80,80))
-    self.label_selected_pictures_count.set_topright_position((180,30))
+    self.label_selected_pictures_count=label.Label('pictures:  0',(200,200,200,255),(80,80,80,80))
+    self.label_selected_pictures_count.set_topright_position((990,60))
     self.widgets_container.append(self.label_selected_pictures_count)
-    self.label_selected_picture_types_count=label.Label('0',(200,200,200,255),(80,80,80,80))
-    self.label_selected_picture_types_count.set_topright_position((280,30))
+    self.label_selected_picture_types_count=label.Label('types:  0',(200,200,200,255),(80,80,80,80))
+    self.label_selected_picture_types_count.set_topright_position((990,90))
     self.widgets_container.append(self.label_selected_picture_types_count)
     
     # We add 4 spaces at the end of the string 'No picture selected' because there is a bug in MenuSystem software that cuts 2 ending letters of the string.
