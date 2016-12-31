@@ -35,30 +35,20 @@ class Map:
       print('if event.type==pygame.KEYDOWN:')
       if event.key==pygame.K_DOWN:
         print('if event.key==pygame.K_DOWN:')
-        self.start_moving_down()
+        self.start_moving([0,-self.movement_step])
       elif event.key==pygame.K_UP:
         print('if event.key==pygame.K_UP:')
-        self.start_moving_up()
+        self.start_moving([0,self.movement_step])
       elif event.key==pygame.K_RIGHT:
         print('if event.key==pygame.K_RIGHT:')
-        self.start_moving_right()
+        self.start_moving([-self.movement_step,0])
       elif event.key==pygame.K_LEFT:
         print('if event.key==pygame.K_LEFT:')
-        self.start_moving_left()
+        self.start_moving([self.movement_step,0])
     elif event.type==pygame.KEYUP:
       print('elif event.type==pygame.KEYUP:')
-      if event.key==pygame.K_DOWN:
-        print('if event.key==pygame.K_DOWN:')
-        self.stop_moving_down()
-      elif event.key==pygame.K_UP:
-        print('if event.key==pygame.K_UP:')
-        self.stop_moving_up()
-      elif event.key==pygame.K_RIGHT:
-        print('if event.key==pygame.K_RIGHT:')
-        self.stop_moving_right()
-      elif event.key==pygame.K_LEFT:
-        print('if event.key==pygame.K_LEFT:')
-        self.stop_moving_left()
+      if event.key==pygame.K_DOWN or event.key==pygame.K_UP or event.key==pygame.K_RIGHT or event.key==pygame.K_LEFT:
+        self.stop_moving()
     if self.moving:
       print('if self.moving:')
       self.rect.topleft=(self.rect.left+self.movement[0],self.rect.top+self.movement[1])
@@ -74,35 +64,11 @@ class Map:
       self.game.screen.blit(self.image,self.rect.topleft)
       self.game.gui.draw()
       
-  def start_moving_down(self):
+  def start_moving(self, movement):
     self.moving=True
-    self.movement=[0,-self.movement_step]
+    self.movement=movement
     
-  def start_moving_up(self):
-    self.moving=True
-    self.movement=[0,self.movement_step]
-    
-  def start_moving_right(self):
-    self.moving=True
-    self.movement=[-self.movement_step,0]
-    
-  def start_moving_left(self):
-    self.moving=True
-    self.movement=[self.movement_step,0]
-    
-  def stop_moving_down(self):
-    self.moving=False
-    self.movement=[0,0]
-    
-  def stop_moving_up(self):
-    self.moving=False
-    self.movement=[0,0]
-    
-  def stop_moving_right(self):
-    self.moving=False
-    self.movement=[0,0]
-    
-  def stop_moving_left(self):
+  def stop_moving(self):
     self.moving=False
     self.movement=[0,0]
     
