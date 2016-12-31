@@ -69,4 +69,5 @@ class Gui:
   def draw(self):
     
     for widget in self.widgets_container:
+      widget.bg=self.game.screen.subsurface(widget.rect).copy()
       widget.draw()
