@@ -26,5 +26,8 @@ class Label(pygame.sprite.Sprite):
     self.update()
     
   def update(self, *event):
+    self.draw()
+    
+  def draw(self):
     self.screen.blit(self.image,self.rect.topleft)
     

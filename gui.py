@@ -66,3 +66,7 @@ class Gui:
     
     return ret
     
+  def draw(self):
+    
+    for widget in self.widgets_container:
+      widget.draw()
