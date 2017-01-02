@@ -28,10 +28,10 @@ class Gui:
     
     #~ création des menus
     self.menu_game = MenuSystem.MenuSystem.Menu('game', ('save','load','new','exit'))
+    self.menu_map = MenuSystem.MenuSystem.Menu('map',('zoom with pictures ','zoom without pictures','open file','create','export with pictures as one image'))
+    self.menu_layer = MenuSystem.MenuSystem.Menu('layer', ('show list','new','move','join layers','delete empty layers'))
     self.menu_picture = MenuSystem.MenuSystem.Menu('picture', ('open file','zoom','move to layer'))
-    self.menu_layer = MenuSystem.MenuSystem.Menu('layer', ('show list','new','move','join','delete empty'))
-    self.menu_select = MenuSystem.MenuSystem.Menu('select',('same file and zoom','same file','all on screen','all'))
-    self.menu_map = MenuSystem.MenuSystem.Menu('map',('zoom with pictures ','zoom without pictures','open file'))
+    self.menu_select = MenuSystem.MenuSystem.Menu('select',('same file and zoom','same file','layers','all on screen','all'))
     
     #~ création de la barre
     self.bar = MenuSystem.MenuSystem.MenuBar()
