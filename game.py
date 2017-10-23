@@ -4,6 +4,8 @@ import pygame
 
 import gui
 import maps
+import mouse
+import pictures
 
 
 class Game:
@@ -15,8 +17,10 @@ class Game:
     pygame.display.flip()
     
     self.map=maps.Map(self)
-    self.map.open_image("""/home/kdokoli/fanda/wallpapers/teapot-dome-sky-em-from-the-boundary-trail-pasayten-wilderness.jpg""")
+    self.map.open_image("""images/background/teapot-dome-sky-em-from-the-boundary-trail-pasayten-wilderness.jpg""")
     self.gui = gui.Gui(self)
+    self.pictures=pictures.Pictures(self)
+    self.mouse=mouse.Mouse()
     pygame.display.flip()
 
   def run(self):
@@ -29,14 +33,17 @@ class Game:
         events=pygame.event.get()
         if events:
           for event in events:
-            self.map.update(event)
+            self.mouse.update(event)
             self.gui.update(event)
+            self.pictures.update(event)
+            self.map.update(event)
         else:
           self.map.update(None)
       else:
         ev = pygame.event.wait()
-        self.map.update(ev)
+        self.pictures.update(ev)
         self.gui.update(ev)
+        self.map.update(ev)
       
       pygame.display.flip()
       

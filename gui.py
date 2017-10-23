@@ -3,6 +3,7 @@
 import pygame
 
 import MenuSystem
+import PathGetter
 
 import label
 
@@ -14,12 +15,15 @@ class Gui:
     self.game=game
     self.widgets_container=[]
     self.create_gui()
+    self.path_picture_to_open=None
+    self.interaction_with_widgets_registered=False
 
   def create_gui(self):
     # based on exemple.py in MenuSystem package, the comments are in French
     
     #~ le module doit être initialisé après la vidéo
     MenuSystem.MenuSystem.init()
+    
     #~ change la couleur du fond
     MenuSystem.MenuSystem.BGCOLOR = pygame.Color(200,200,200,80)
     MenuSystem.MenuSystem.FGCOLOR = pygame.Color(200,200,200,255)
@@ -49,26 +53,61 @@ class Gui:
     # We add 4 spaces at the end of the string 'No picture selected' because there is a bug in MenuSystem software that cuts 2 ending letters of the string.
     self.menu_file_and_zoom=MenuSystem.MenuSystem.Menu('No picture selected    ',())
     self.label_file_and_zoom=MenuSystem.MenuSystem.MenuChoice()
+    self.label_file_and_zoom.set(self.menu_file_and_zoom,(500,50),w=100)
     self.widgets_container.append(self.label_file_and_zoom)
-    self.label_file_and_zoom.set(self.menu_file_and_zoom,(460,30))
+    
+    self.menu_choice_layers=MenuSystem.MenuSystem.MenuChoice()
+    self.menu_choice_layers.set(MenuSystem.MenuSystem.Menu(' ',(' ',)),(500,450),w=100)
+    self.menu_choice_layers.undraw()
+    self.button_layer_confirm=MenuSystem.MenuSystem.Button('OK',100,30)
+    self.button_layer_confirm.topleft=(500,500)
+    self.button_layer_confirm.set()
+    self.game.screen.blit(self.button_layer_confirm._bg,self.button_layer_confirm)
     
   def update(self, event):
     
+    self.interaction_with_widgets_registered=False
     ret=[]
     for widget in self.widgets_container:
       ret=widget.update(event)
       
       if ret:
+        self.interaction_with_widgets_registered=True
         
         if widget==self.bar:
           if self.bar.choice:
             if self.bar.choice_index==(0,3):
               self.game.running=False
+            
+            elif self.bar.choice_index==(3,0):
+              self.open_picture_file()
+            
+        elif widget==self.button_layer_confirm:
+          if widget.clicked:
+            self.widgets_container.remove(self.menu_choice_layers)
+            self.widgets_container.remove(self.button_layer_confirm)
+            self.menu_choice_layers.undraw()
+            self.game.screen.blit(self.button_layer_confirm._bg,self.button_layer_confirm)
+            self.game.pictures.open_file(self.path_picture_to_open,self.menu_choice_layers.choice_label)
     
     return ret
     
   def draw(self):
     
     for widget in self.widgets_container:
-      widget.bg=self.game.screen.subsurface(widget.rect).copy()
+      if isinstance(widget,MenuSystem.MenuSystem.Button):
+        widget._bg=self.game.screen.subsurface(widget).copy()
+      else:
+        widget.bg=self.game.screen.subsurface(widget.rect).copy()
       widget.draw()
+  
+  def open_picture_file(self):
+    
+    self.path_picture_to_open=PathGetter.PathGetter.get()
+    layer=0
+    if self.game.pictures.pictures_selected.sprites():
+      layer=self.game.pictures.all_pictures.get_layer_of_sprite(self.game.pictures.pictures_selected.sprites()[-1])
+    self.menu_choice_layers.set(MenuSystem.MenuSystem.Menu(layer,self.game.pictures.all_pictures.layers()),(500,450),w=100)
+    self.widgets_container.append(self.menu_choice_layers)
+    self.widgets_container.append(self.button_layer_confirm)
+    self.button_layer_confirm.set()
