@@ -2,6 +2,8 @@
 
 import pygame
 
+import sgc
+
 import gui
 import maps
 import mouse
@@ -12,7 +14,7 @@ class Game:
   
   def __init__(self):
 
-    self.screen = pygame.display.set_mode((1000,800))
+    self.screen = sgc.surface.Screen((1000,800))
     self.screen_rect=self.screen.get_rect()
     pygame.display.flip()
     
@@ -21,6 +23,7 @@ class Game:
     self.gui = gui.Gui(self)
     self.pictures=pictures.Pictures(self)
     self.mouse=mouse.Mouse()
+    self.clock = pygame.time.Clock()
     pygame.display.flip()
 
   def run(self):
@@ -28,6 +31,7 @@ class Game:
     self.running=True
     
     while self.running is True:
+      time=self.clock.tick(30)
       
       if self.map.moving is True:
         events=pygame.event.get()
@@ -41,9 +45,11 @@ class Game:
           self.map.update(None)
       else:
         ev = pygame.event.wait()
-        self.pictures.update(ev)
+        self.mouse.update(ev)
         self.gui.update(ev)
+        self.pictures.update(ev)
         self.map.update(ev)
       
+      sgc.update(time)
       pygame.display.flip()
       

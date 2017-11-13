@@ -84,4 +84,5 @@ class Pictures:
     self.picture_under_mouse_pointer.add(picture)
     self.picture_under_mouse_pointer.sprite.higlight()
     
-  
+  def get_number_of_layers(self):
+    return len(self.all_pictures.layers())

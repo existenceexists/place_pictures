@@ -4,6 +4,7 @@ import pygame
 
 import MenuSystem
 import PathGetter
+import sgc
 
 import label
 
@@ -50,19 +51,29 @@ class Gui:
     self.label_selected_picture_types_count.set_topright_position((990,90))
     self.widgets_container.append(self.label_selected_picture_types_count)
     
-    # We add 4 spaces at the end of the string 'No picture selected' because there is a bug in MenuSystem software that cuts 2 ending letters of the string.
-    self.menu_file_and_zoom=MenuSystem.MenuSystem.Menu('No picture selected    ',())
-    self.label_file_and_zoom=MenuSystem.MenuSystem.MenuChoice()
-    self.label_file_and_zoom.set(self.menu_file_and_zoom,(500,50),w=100)
-    self.widgets_container.append(self.label_file_and_zoom)
     
-    self.menu_choice_layers=MenuSystem.MenuSystem.MenuChoice()
-    self.menu_choice_layers.set(MenuSystem.MenuSystem.Menu(' ',(' ',)),(500,450),w=100)
-    self.menu_choice_layers.undraw()
-    self.button_layer_confirm=MenuSystem.MenuSystem.Button('OK',100,30)
-    self.button_layer_confirm.topleft=(500,500)
-    self.button_layer_confirm.set()
-    self.game.screen.blit(self.button_layer_confirm._bg,self.button_layer_confirm)
+  def create_dialog_open_picture_file(self):
+    label_title = sgc.Label(text="""Open and show picture file \n"""+self.path_to_picture_to_open+""" .""",col=(150,150,150))
+    label_title.pos=(0,0)
+    label_zoom=sgc.Label(text="""Enter zoom percent. \nThe size of the new picture will be scaled \nto the given percent size of the original picture. \nThe number can be an integer or float number between 0 and infinity.""",col=(150,150,150))
+    label_zoom.pos=(0,50)
+    self.input_box_zoom = sgc.InputBox(label="zoom percent",default="100")
+    self.input_box_zoom.pos = (0,140)
+    top_layer=self.game.pictures.get_number_of_layers()
+    if top_layer==0:
+      top_layer=1
+    label_layer=sgc.Label(text="""Enter layer number. \nThe new picture will be moved into the layer. \nThe number can be an integer number between 1 and """+str(top_layer)+""" .""",col=(150,150,150))
+    label_layer.pos=(0,190)
+    self.input_box_layer = sgc.InputBox(label="layer number",default="1")
+    self.input_box_layer.pos = (0,270)
+    btn_ok = sgc.Button(label="OK", pos=(100,320))
+    print btn_ok.on_click
+    btn_ok.on_click = self.confirm_dialog_open_picture_file
+    print btn_ok.on_click
+    container_dialog_open_picture_file=sgc.Container(widgets=(label_title,label_zoom,self.input_box_zoom,label_layer,self.input_box_layer,btn_ok), border=10)
+    # Display dialog window, on_click replaced through inheritance
+    self.dialog_open_picture_file=sgc.Dialog(widget=container_dialog_open_picture_file,title="Open picture file")
+    self.dialog_open_picture_file.rect.center = self.game.screen.rect.center
     
   def update(self, event):
     
@@ -80,16 +91,8 @@ class Gui:
               self.game.running=False
             
             elif self.bar.choice_index==(3,0):
-              self.open_picture_file()
+              self.show_dialog_open_picture_file()
             
-        elif widget==self.button_layer_confirm:
-          if widget.clicked:
-            self.widgets_container.remove(self.menu_choice_layers)
-            self.widgets_container.remove(self.button_layer_confirm)
-            self.menu_choice_layers.undraw()
-            self.game.screen.blit(self.button_layer_confirm._bg,self.button_layer_confirm)
-            self.game.pictures.open_file(self.path_picture_to_open,self.menu_choice_layers.choice_label)
-    
     return ret
     
   def draw(self):
@@ -101,13 +104,49 @@ class Gui:
         widget.bg=self.game.screen.subsurface(widget.rect).copy()
       widget.draw()
   
-  def open_picture_file(self):
+  def confirm_dialog_open_picture_file(self):
+    print "shdf"
+    layer=self.input_box_layer.text
+    try:
+      assert(self.is_integer(layer))
+      layer=int(layer)
+      assert(layer>=1)
+      assert(layer<=self.game.pictures.get_number_of_layers())
+    except AssertionError:
+      self.show_dialog_wrong_layer()
+      return
+    zoom=self.input_box_zoom.text
+    try:
+      assert(self.is_float(zoom))
+      zoom=float(zoom)
+      assert(zoom>=1)
+      assert(zoom<=self.game.pictures.get_number_of_layers())
+    except AssertionError:
+      self.show_dialog_wrong_zoom()
+      return
+    self.dialog_open_picture_file.remove()
+    self.game.pictures.open_picture_file(path_to_picture_file,layer,zoom)
+    print "pass"
     
-    self.path_picture_to_open=PathGetter.PathGetter.get()
-    layer=0
-    if self.game.pictures.pictures_selected.sprites():
-      layer=self.game.pictures.all_pictures.get_layer_of_sprite(self.game.pictures.pictures_selected.sprites()[-1])
-    self.menu_choice_layers.set(MenuSystem.MenuSystem.Menu(layer,self.game.pictures.all_pictures.layers()),(500,450),w=100)
-    self.widgets_container.append(self.menu_choice_layers)
-    self.widgets_container.append(self.button_layer_confirm)
-    self.button_layer_confirm.set()
+  def show_dialog_open_picture_file(self):
+    self.path_to_picture_to_open=PathGetter.PathGetter.get()
+    if not self.path_to_picture_to_open:
+      return
+    self.create_dialog_open_picture_file()
+    self.dialog_open_picture_file.add()
+    
+  def is_float(self,text):
+    try:
+      float(text)
+    except:
+      return False
+    else:
+      return True
+    
+  def is_integer(self,text):
+    try:
+      int(text)
+    except:
+      return False
+    else:
+      return True
