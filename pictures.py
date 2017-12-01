@@ -14,11 +14,11 @@ class Pictures:
     self.left_control_key_pressed=False
     self.mouse=mouse.Mouse()
     self.all_pictures=pygame.sprite.LayeredUpdates()
-    self.pictures_displayed=pygame.sprite.LayeredUpdates()
+    self.pictures_to_display=pygame.sprite.LayeredUpdates()
     self.pictures_selected=pygame.sprite.LayeredUpdates()
     self.picture_under_mouse_pointer=pygame.sprite.GroupSingle()
     
-  def open_file(self,path,layer):
+  def open_picture_file(self,path,layer,zoom):
     pic=picture.Picture(path)
     pic.set_layer(layer)
     self.all_pictures.add(pic)
@@ -39,11 +39,14 @@ class Pictures:
       if event.key==pygame.K_LCTRL:
         self.left_control_key_pressed=False
     
+  def draw(self):
+    self.pictures_to_display.draw(self.game.screen)
+    
   def check_mouse_pointer_collision(self):
-    if self.game.gui.interaction_with_widgets_registered:
-      pass
+    if self.do_not_interact_with_pictures:
+      return
     else:
-      pictures=pygame.sprite.spritecollide(self.mouse,self.pictures_displayed,False)
+      pictures=pygame.sprite.spritecollide(self.mouse,self.pictures_to_display,False)
       if pictures:
         if not self.picture_under_mouse_pointer.sprite or self.picture_under_mouse_pointer.sprite and self.picture_under_mouse_pointer.sprite and pictures[-1]!=self.picture_under_mouse_pointer.sprite:
           self.highlight_another_picture(pictures[-1])
@@ -51,10 +54,10 @@ class Pictures:
         pass
     
   def check_on_mousebuttonup(self,position):
-    if self.game.gui.interaction_with_widgets_registered:
-      pass
+    if self.do_not_interact_with_pictures:
+      return
     else:
-      pictures=pygame.sprite.spritecollide(self.mouse,self.pictures_displayed,False)
+      pictures=pygame.sprite.spritecollide(self.mouse,self.pictures_to_display,False)
       if pictures:
         if pictures[-1] in self.pictures_selected.sprites():
           self.pictures_selected.remove(pictures[-1])

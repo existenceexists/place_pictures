@@ -58,6 +58,9 @@ class Map:
       self.game.screen.blit(self.image,self.rect.topleft)
       self.game.gui.draw()
       
+  def draw(self):
+    self.game.screen.blit(self.image,self.rect.topleft)
+    
   def set_moving(self, movement):
     self.movement=movement
     if movement==[0,0]:

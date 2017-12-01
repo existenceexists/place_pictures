@@ -12,3 +12,6 @@ class Mouse(pygame.sprite.Sprite):
   def update(self,event):
     if event.type==pygame.MOUSEMOTION:
       self.rect.topleft=event.pos
+    
+  def draw(self):
+    pass

@@ -25,6 +25,12 @@ class Game:
     self.mouse=mouse.Mouse()
     self.clock = pygame.time.Clock()
     pygame.display.flip()
+    
+  def draw(self):
+    self.map.draw()
+    self.pictures.draw()
+    self.gui.draw()
+    self.mouse.draw()
 
   def run(self):
     
@@ -33,22 +39,17 @@ class Game:
     while self.running is True:
       time=self.clock.tick(30)
       
-      if self.map.moving is True:
-        events=pygame.event.get()
-        if events:
-          for event in events:
-            self.mouse.update(event)
-            self.gui.update(event)
-            self.pictures.update(event)
-            self.map.update(event)
-        else:
-          self.map.update(None)
+      events=pygame.event.get()
+      if events:
+        for event in events:
+          self.mouse.update(event)
+          self.gui.update(event)
+          self.pictures.update(event)
+          self.map.update(event)
+      elif self.map.moving is True:
+        self.map.update(None)
       else:
-        ev = pygame.event.wait()
-        self.mouse.update(ev)
-        self.gui.update(ev)
-        self.pictures.update(ev)
-        self.map.update(ev)
+        self.draw()
       
       sgc.update(time)
       pygame.display.flip()
