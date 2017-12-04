@@ -1,8 +1,7 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import pygame
-
-import sgc
 
 import gui
 import maps
@@ -13,11 +12,9 @@ import pictures
 class Game:
   
   def __init__(self):
-
-    self.screen = sgc.surface.Screen((1000,800))
+    self.screen = pygame.display.set_mode((1000,800))
     self.screen_rect=self.screen.get_rect()
-    pygame.display.flip()
-    
+    pygame.key.set_repeat(500,500)
     self.map=maps.Map(self)
     self.map.open_image("""images/background/teapot-dome-sky-em-from-the-boundary-trail-pasayten-wilderness.jpg""")
     self.gui = gui.Gui(self)
@@ -26,31 +23,26 @@ class Game:
     self.clock = pygame.time.Clock()
     pygame.display.flip()
     
-  def draw(self):
-    self.map.draw()
-    self.pictures.draw()
-    self.gui.draw()
-    self.mouse.draw()
-
+  def exit(self):
+    self.running=False
+    
   def run(self):
-    
     self.running=True
-    
     while self.running is True:
-      time=self.clock.tick(30)
-      
-      events=pygame.event.get()
-      if events:
-        for event in events:
-          self.mouse.update(event)
-          self.gui.update(event)
-          self.pictures.update(event)
-          self.map.update(event)
-      elif self.map.moving is True:
-        self.map.update(None)
-      else:
-        self.draw()
-      
-      sgc.update(time)
+      event=pygame.event.wait()
+      do_drawing=False
+      if self.mouse.update(event):
+        do_drawing=True
+      if self.gui.update(event):
+        do_drawing=True
+      if self.pictures.update(event):
+        do_drawing=True
+      if self.map.update(event):
+        do_drawing=True
+      if do_drawing:
+        self.map.draw()
+        self.pictures.draw()
+        self.gui.draw()
+        self.mouse.draw()
       pygame.display.flip()
       

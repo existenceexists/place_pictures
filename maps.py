@@ -29,22 +29,28 @@ class Map:
     self.game.screen.blit(self.image,self.rect.topleft)
     
   def update(self,event):
-    if event is None:
-      pass
-    elif event.type==pygame.KEYDOWN:
+    return_value=None
+    self.movement=[0,0]
+    if event.type==pygame.KEYDOWN:
       if event.key==pygame.K_DOWN:
         self.set_moving([self.movement[0],-self.movement_step])
+        return_value=True
       elif event.key==pygame.K_UP:
         self.set_moving([self.movement[0],self.movement_step])
+        return_value=True
       elif event.key==pygame.K_RIGHT:
         self.set_moving([-self.movement_step,self.movement[1]])
+        return_value=True
       elif event.key==pygame.K_LEFT:
         self.set_moving([self.movement_step,self.movement[1]])
+        return_value=True
     elif event.type==pygame.KEYUP:
       if event.key==pygame.K_DOWN or event.key==pygame.K_UP:
         self.set_moving([self.movement[0],0])
+        return_value=True
       elif event.key==pygame.K_RIGHT or event.key==pygame.K_LEFT:
         self.set_moving([0,self.movement[1]])
+        return_value=True
     if self.moving:
       self.rect.topleft=(self.rect.left+self.movement[0],self.rect.top+self.movement[1])
       if self.rect.left>0:
@@ -55,9 +61,9 @@ class Map:
         self.rect.top=0
       if self.rect.bottom<self.game.screen_rect.bottom:
         self.rect.bottom=self.game.screen_rect.bottom
-      self.game.screen.blit(self.image,self.rect.topleft)
-      self.game.gui.draw()
-      
+    return return_value
+    
+    
   def draw(self):
     self.game.screen.blit(self.image,self.rect.topleft)
     

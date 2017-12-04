@@ -11,7 +11,7 @@ class Pictures:
   
   def __init__(self,game):
     self.game=game
-    self.left_control_key_pressed=False
+    self.do_not_interact_with_pictures=False
     self.mouse=mouse.Mouse()
     self.all_pictures=pygame.sprite.LayeredUpdates()
     self.pictures_to_display=pygame.sprite.LayeredUpdates()
@@ -24,41 +24,44 @@ class Pictures:
     self.all_pictures.add(pic)
   
   def update(self,event):
-    #movement=[0,0]
-    if event is None and self.game.map.moving:
-      self.all_pictures.update(movement=self.game.map.movement)
-      return
+    return_value=None
+    if (event.type==pygame.KEYDOWN or event.type==pygame.KEYUP) and self.game.map.moving:
+      #self.all_pictures.update(movement=self.game.map.movement)
+      for picture in self.all_pictures:
+        picture.update(movement=self.game.map.movement)
+      return_value=True
     elif event.type==pygame.MOUSEMOTION:
-      self.check_mouse_pointer_collision()
+      if self.check_mouse_motion_collision():
+        return_value=True
     elif event.type==pygame.MOUSEBUTTONUP:
-      self.check_on_mousebuttonup(event.pos)
-    elif event.type==pygame.KEYDOWN:
-      if event.key==pygame.K_LCTRL:
-        self.left_control_key_pressed=True
-    elif event.type==pygame.KEYUP:
-      if event.key==pygame.K_LCTRL:
-        self.left_control_key_pressed=False
+      if self.check_on_mousebuttonup(event.pos):
+        return_value=True
+    return return_value
     
   def draw(self):
     self.pictures_to_display.draw(self.game.screen)
     
-  def check_mouse_pointer_collision(self):
+  def check_mouse_motion_collision(self):
+    return_value=None
     if self.do_not_interact_with_pictures:
-      return
+      pass
     else:
       pictures=pygame.sprite.spritecollide(self.mouse,self.pictures_to_display,False)
       if pictures:
+        return_value=True
         if not self.picture_under_mouse_pointer.sprite or self.picture_under_mouse_pointer.sprite and self.picture_under_mouse_pointer.sprite and pictures[-1]!=self.picture_under_mouse_pointer.sprite:
           self.highlight_another_picture(pictures[-1])
       else:
         pass
     
   def check_on_mousebuttonup(self,position):
+    return_value=None
     if self.do_not_interact_with_pictures:
-      return
+      pass
     else:
       pictures=pygame.sprite.spritecollide(self.mouse,self.pictures_to_display,False)
       if pictures:
+        return_value=True
         if pictures[-1] in self.pictures_selected.sprites():
           self.pictures_selected.remove(pictures[-1])
         else:

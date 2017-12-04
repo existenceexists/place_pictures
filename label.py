@@ -2,32 +2,43 @@
 
 import pygame
 
+import widget
 
-class Label(pygame.sprite.Sprite):
-  
-  def __init__(self,text,color,background_color=None,font=None):
-    
-    self.screen=pygame.display.get_surface()
-    if font is None:
-      font=pygame.font.Font(None, 24)
-    self.font=font
-    if background_color is None:
-      self.image=font.render(text,True,pygame.Color(*color))
-    else:
-      self.image=font.render(text,True,pygame.Color(*color),pygame.Color(*background_color))
-    self.rect=self.image.get_rect()
-    
-  def set_topleft_position(self, position):
-    self.rect.topleft=position
-    self.update()
-    
-  def set_topright_position(self, position):
-    self.rect.topright=position
-    self.update()
-    
-  def update(self, *event):
-    self.draw()
-    
-  def draw(self):
-    self.screen.blit(self.image,self.rect.topleft)
+
+class Label(widget.Widget):
+	def __init__(
+			self, text, fontFace=None, fontSize=14,
+			color=(200,200,200), backgroundColor=None, container=None):
+		widget.Widget.__init__(self, container)
+
+		self.color = color
+		self.backgroundColor = backgroundColor
+		if fontFace is None:
+			fontFace = utils.getFontFilename()
+		self.font = pygame.font.Font(fontFace, fontSize)
+		self.__text = text
+		self.createImage()
+
+	def update(self,event):
+		if not self.dirty:
+			return
+		self.dirty = 0
+
+	def SetText(self, text):
+		""" The rect must be placed with i.e. somelabel.rect.move_ip(...)
+		after each call to this method."""
+		position = self.rect.topleft
+		self.__text = text
+		self.SetDirty(1)
+		self.createImage()
+		self.rect.move_ip(position)
+
+	def createImage(self):
+		if self.backgroundColor is None :
+			self.image = self.font.render(self.__text, 1, self.color)
+		else :
+			self.image = self.font.render(self.__text, 1, self.color,
+				self.backgroundColor)
+		self.rect  = self.image.get_rect()
+
     
