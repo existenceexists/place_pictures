@@ -14,10 +14,11 @@ class Gui:
     
     self.game=game
     self.widgets_container=[]
+    self.widgets_to_draw_basic=[]
+    self.widgets_to_draw=[]
     self.create_gui()
     self.path_picture_to_open=None
     self.sgc_dialog_window_shown=False
-    self.draw()
 
   def create_gui(self):
     # based on exemple.py in MenuSystem package, the comments are in French
@@ -42,7 +43,9 @@ class Gui:
     #~ création de la barre
     self.bar = MenuSystem.MenuSystem.MenuBar()
     self.widgets_container.append(self.bar)
-    self.bar.set((self.menu_game,self.menu_map,self.menu_layer,self.menu_picture,self.menu_selection,self.menu_select))
+    menu_bar_rect=self.bar.set((self.menu_game,self.menu_map,self.menu_layer,self.menu_picture,self.menu_selection,self.menu_select))
+    self.widgets_to_draw_basic.append([self.game.screen.subsurface(menu_bar_rect).copy(),menu_bar_rect])
+    self.widgets_to_draw=list(self.widgets_to_draw_basic)
     
     #self.label_selected_pictures_count=label.Label('pictures:  0',(200,200,200,255),(80,80,80,80))
     #self.label_selected_pictures_count.set_topright_position((990,60))
@@ -91,17 +94,16 @@ class Gui:
             
             elif self.bar.choice_index==(3,0):
               self.show_dialog_open_picture_file()
-      
+    if ret:
+      self.widgets_to_draw=list(self.widgets_to_draw_basic)
+      for rect in ret:
+        self.widgets_to_draw.append([self.game.screen.subsurface(rect).copy(), rect])
     return ret
-    
+  
   def draw(self):
-    
-    for widget in self.widgets_container:
-      if isinstance(widget,MenuSystem.MenuSystem.Button):
-        widget._bg=self.game.screen.subsurface(widget).copy()
-      else:
-        widget.bg=self.game.screen.subsurface(widget.rect).copy()
-      widget.draw()
+    for widget_and_rect in self.widgets_to_draw:
+      #print widget_and_rect
+      self.game.screen.blit(widget_and_rect[0],widget_and_rect[1])
   
   def confirm_dialog_open_picture_file(self):
     zoom=self.input_box_zoom.text

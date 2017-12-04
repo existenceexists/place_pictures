@@ -30,19 +30,13 @@ class Game:
     self.running=True
     while self.running is True:
       event=pygame.event.wait()
-      do_drawing=False
-      if self.mouse.update(event):
-        do_drawing=True
-      if self.gui.update(event):
-        do_drawing=True
-      if self.pictures.update(event):
-        do_drawing=True
-      if self.map.update(event):
-        do_drawing=True
-      if do_drawing:
-        self.map.draw()
-        self.pictures.draw()
-        self.gui.draw()
-        self.mouse.draw()
+      self.mouse.update(event)
+      self.gui.update(event)
+      self.pictures.update(event)
+      self.map.update(event)
+      self.map.draw()
+      self.pictures.draw()
+      self.gui.draw()
+      self.mouse.draw()
       pygame.display.flip()
       
