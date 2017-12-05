@@ -4,8 +4,7 @@ import pygame
 
 import MenuSystem
 import PathGetter
-
-import label
+import FunnyGUI
 
 
 class Gui:
