@@ -144,7 +144,7 @@ class Gui:
       zoom=float(zoom)
       assert(zoom>=0)
     except AssertionError:
-      self.show_dialog_wrong_zoom()
+      self.display_message_window(["You have not filled zoom number field correctly."])
       return
     layer=self.input_box_layer.GetText()
     try:
@@ -155,7 +155,7 @@ class Gui:
       if number_of_layers>0:
         assert(layer<=self.game.pictures.get_number_of_layers())
     except AssertionError:
-      self.show_dialog_wrong_layer()
+      self.display_message_window(["You have not filled layer number field correctly."])
       return
     self.container_widgets_FunnyGUI.remove(self.window_dialog_open_picture_file)
     self.FunnyGUI_dialogs_stealing_focus.remove(self.window_dialog_open_picture_file)
@@ -189,3 +189,33 @@ class Gui:
       return False
     else:
       return True
+  
+  def display_message_window(self,text_list):
+    height=50
+    width=0
+    for text in text_list:
+      height=height+30
+      width=max(width,pygame.font.Font(pygame.font.match_font("freesans,sansserif,microsoftsansserif,arial,dejavusans,verdana,timesnewroman,helvetica"),14).size(text)[0])
+    height=height+50
+    width=width+(2*50)
+    if width>self.game.screen_rect.width:
+      width=self.game.screen_rect.widt
+    if height>self.game.screen_rect.height:
+      height=self.game.screen_rect.height
+    self.message_window=FunnyGUI.window.Window(width=width,height=height,backgroundColor=(100,0,0,100))
+    self.message_window.rect.center=(self.game.screen_rect.width/2,self.game.screen_rect.height/2)
+    self.container_widgets_FunnyGUI.append(self.message_window)
+    self.FunnyGUI_dialogs_stealing_focus.append(self.message_window)
+    position_x=50
+    position_y=50
+    for text in text_list:
+      self.message_window.add(FunnyGUI.label.Label(text=text))
+      self.message_window.widgets[-1].rect.move_ip(position_x,position_y)
+      position_y=position_y+30
+    self.message_window.add(FunnyGUI.button.Button(text="OK",onClickCallback=self.dismiss_message_window))
+    self.message_window.widgets[-1].rect.center=(width/2,position_y+10)
+  
+  def dismiss_message_window(self):
+    self.container_widgets_FunnyGUI.remove(self.message_window)
+    self.FunnyGUI_dialogs_stealing_focus.remove(self.message_window)
+    self.force_everything_to_draw=True
