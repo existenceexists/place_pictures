@@ -17,6 +17,7 @@ class Gui:
     self.widgets_MenuSystem_to_draw=[]
     self.create_gui()
     self.path_picture_to_open=None
+    self.force_everything_to_draw=False
 
   def create_gui(self):
     # based on exemple.py in MenuSystem package, the comments are in French
@@ -98,6 +99,9 @@ class Gui:
     for widget in self.container_widgets_FunnyGUI:
       if widget.update(event):
         return_value=True
+    if self.force_everything_to_draw:
+        return_value=True
+        self.force_everything_to_draw=False
     return return_value
   
   def draw(self):
@@ -107,7 +111,7 @@ class Gui:
       widget.draw(self.game.screen)
   
   def confirm_dialog_open_picture_file(self):
-    zoom=self.input_box_zoom.text
+    zoom=self.input_box_zoom.GetText()
     try:
       assert(self.is_float(zoom))
       zoom=float(zoom)
@@ -115,7 +119,7 @@ class Gui:
     except AssertionError:
       self.show_dialog_wrong_zoom()
       return
-    layer=self.input_box_layer.text
+    layer=self.input_box_layer.GetText()
     try:
       assert(self.is_integer(layer))
       layer=int(layer)
@@ -126,7 +130,8 @@ class Gui:
     except AssertionError:
       self.show_dialog_wrong_layer()
       return
-    self.dialog_open_picture_file.remove()
+    self.container_widgets_FunnyGUI.remove(self.window_dialog_open_picture_file)
+    self.force_everything_to_draw=True
     self.game.pictures.open_picture_file(self.path_to_picture_to_open,layer,zoom)
     
   def show_dialog_open_picture_file(self):
