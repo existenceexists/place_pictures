@@ -54,7 +54,7 @@ class Gui:
     #self.widgets_container.append(self.label_selected_picture_types_count)
     
   def create_dialog_open_picture_file(self):
-    self.window_dialog_open_picture_file=FunnyGUI.window.Window()
+    self.window_dialog_open_picture_file=FunnyGUI.window.Window(width=530,height=480,backgroundColor=(0,0,0,200))
     self.window_dialog_open_picture_file.rect.center=(self.game.screen_rect.width/2,self.game.screen_rect.height/2)
     self.container_widgets_FunnyGUI.append(self.window_dialog_open_picture_file)
     self.FunnyGUI_dialogs_stealing_focus.append(self.window_dialog_open_picture_file)
@@ -202,7 +202,7 @@ class Gui:
       width=self.game.screen_rect.widt
     if height>self.game.screen_rect.height:
       height=self.game.screen_rect.height
-    self.message_window=FunnyGUI.window.Window(width=width,height=height,backgroundColor=(100,0,0,100))
+    self.message_window=FunnyGUI.window.Window(width=width,height=height,backgroundColor=(100,0,0,200))
     self.message_window.rect.center=(self.game.screen_rect.width/2,self.game.screen_rect.height/2)
     self.container_widgets_FunnyGUI.append(self.message_window)
     self.FunnyGUI_dialogs_stealing_focus.append(self.message_window)
@@ -212,7 +212,7 @@ class Gui:
       self.message_window.add(FunnyGUI.label.Label(text=text))
       self.message_window.widgets[-1].rect.move_ip(position_x,position_y)
       position_y=position_y+30
-    self.message_window.add(FunnyGUI.button.Button(text="OK",onClickCallback=self.dismiss_message_window))
+    self.message_window.add(FunnyGUI.button.Button(text="OK",onClickCallback=self.dismiss_message_window,normalColor=(255,255,255,255),highlightedColor=(255,255,0,255)))
     self.message_window.widgets[-1].rect.center=(width/2,position_y+10)
   
   def dismiss_message_window(self):
