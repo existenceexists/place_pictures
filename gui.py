@@ -15,6 +15,7 @@ class Gui:
     self.container_widgets_FunnyGUI=[]
     self.widgets_MenuSystem_to_draw_basic=[]
     self.widgets_MenuSystem_to_draw=[]
+    self.FunnyGUI_dialogs_stealing_focus=[]
     self.create_gui()
     self.path_picture_to_open=None
     self.force_everything_to_draw=False
@@ -56,6 +57,7 @@ class Gui:
     self.window_dialog_open_picture_file=FunnyGUI.window.Window()
     self.window_dialog_open_picture_file.rect.center=(self.game.screen_rect.width/2,self.game.screen_rect.height/2)
     self.container_widgets_FunnyGUI.append(self.window_dialog_open_picture_file)
+    self.FunnyGUI_dialogs_stealing_focus.append(self.window_dialog_open_picture_file)
     position_x=50
     position_y=50
     self.window_dialog_open_picture_file.add(FunnyGUI.label.Label(text="""Open and show picture file."""))
@@ -103,6 +105,11 @@ class Gui:
   def update(self, event):
     return_value=False
     self.game.pictures.do_not_interact_with_pictures=False
+    if self.FunnyGUI_dialogs_stealing_focus:
+      self.game.pictures.do_not_interact_with_pictures=True
+      if self.FunnyGUI_dialogs_stealing_focus[-1].update(event):
+        return_value=True
+      return return_value
     rect_list=self.menu_bar.update(event)
     if rect_list:
       # Menu bar changed it's image because user interacted with it.
@@ -151,11 +158,13 @@ class Gui:
       self.show_dialog_wrong_layer()
       return
     self.container_widgets_FunnyGUI.remove(self.window_dialog_open_picture_file)
+    self.FunnyGUI_dialogs_stealing_focus.remove(self.window_dialog_open_picture_file)
     self.force_everything_to_draw=True
     self.game.pictures.open_picture_file(self.path_to_picture_to_open,layer,zoom)
     
   def cancel_dialog_open_picture_file(self):
     self.container_widgets_FunnyGUI.remove(self.window_dialog_open_picture_file)
+    self.FunnyGUI_dialogs_stealing_focus.remove(self.window_dialog_open_picture_file)
     self.force_everything_to_draw=True
     
   def show_dialog_open_picture_file(self):
