@@ -80,11 +80,11 @@ class Gui:
   def update(self, event):
     
     self.game.pictures.do_not_interact_with_pictures=False
-    ret=[]
+    rect_list=[]
     for widget in self.widgets_container:
-      ret=widget.update(event)
-      #print ret
-      if ret:
+      rect_list_from_update=widget.update(event)
+      if rect_list_from_update:
+        rect_list.extend(rect_list_from_update)
         self.game.pictures.do_not_interact_with_pictures=True
         if widget==self.bar:
           if self.bar.choice:
@@ -93,15 +93,15 @@ class Gui:
             
             elif self.bar.choice_index==(3,0):
               self.show_dialog_open_picture_file()
-    if ret:
+    if rect_list:
       self.widgets_to_draw=list(self.widgets_to_draw_basic)
-      for rect in ret:
+      for rect in rect_list:
         self.widgets_to_draw.append([self.game.screen.subsurface(rect).copy(), rect])
-    return ret
+      return True
+    return False
   
   def draw(self):
     for widget_and_rect in self.widgets_to_draw:
-      #print widget_and_rect
       self.game.screen.blit(widget_and_rect[0],widget_and_rect[1])
   
   def confirm_dialog_open_picture_file(self):
