@@ -29,8 +29,9 @@ class Map:
     self.game.screen.blit(self.image,self.rect.topleft)
     
   def update(self,event):
-    return_value=None
+    return_value=False
     self.movement=[0,0]
+    self.moving=False
     if event.type==pygame.KEYDOWN:
       if event.key==pygame.K_DOWN:
         self.set_moving([self.movement[0],-self.movement_step])
