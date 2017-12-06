@@ -21,6 +21,15 @@ class Picture(pygame.sprite.Sprite):
     self.image_highlighted_and_selected=pygame.Surface((self.rect.width+4,self.rect.height+4))
     pygame.draw.rect(self.image_highlighted_and_selected,pygame.Color(255,0,255),pygame.Rect((2,2),(self.rect.width+1,self.rect.height+1)),1)
     pygame.draw.rect(self.image_highlighted_and_selected,pygame.Color(255,255,0),pygame.Rect((1,1),(self.rect.width+2,self.rect.height+2)),1)
+    
+  def update(self,position=None,movement=None):
+    if movement:
+      pos=(self.rect.center[0]+movement[0],self.rect.center[1]+movement[1])
+      self.rect.center=position
+      self.image.get_rect().center=position
+    if position:
+      self.rect.center=position
+      self.image.get_rect().center=position
   
   def set_layer(self,layer):
     self._layer=layer
@@ -59,12 +68,3 @@ class Picture(pygame.sprite.Sprite):
     
   def set_image_original(self):
     self.image=self.image_original
-    
-  def update(self,position=None,movement=None):
-    if movement:
-      pos=(self.rect.center[0]+movement[0],self.rect.center[1]+movement[1])
-      self.rect.center=position
-      self.image.get_rect().center=position
-    if position:
-      self.rect.center=position
-      self.image.get_rect().center=position

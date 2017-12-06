@@ -6,27 +6,10 @@ import pygame
 class Map:
   
   def __init__(self,game):
-    
     self.game=game
     self.moving=False
     self.movement_step=10
     self.movement=[0,0]
-    
-  def open_image(self,path):
-    
-    self.path=path
-    image=pygame.image.load(path)
-    image.convert()
-    rect=image.get_rect()
-    width=max(self.game.screen_rect.width,rect.width)
-    height=max(self.game.screen_rect.height,rect.height)
-    self.image=pygame.Surface((width,height))
-    self.image.convert()
-    self.rect=self.image.get_rect()
-    self.image.blit(image,(0,0))
-    self.rect.left=int((self.game.screen_rect.width-self.rect.width)/2.0)
-    self.rect.top=int((self.game.screen_rect.height-self.rect.height)/2.0)
-    self.game.screen.blit(self.image,self.rect.topleft)
     
   def update(self,event):
     return_value=False
@@ -61,7 +44,6 @@ class Map:
         self.rect.bottom=self.game.screen_rect.bottom
     return return_value
     
-    
   def draw(self):
     self.game.screen.blit(self.image,self.rect.topleft)
     
@@ -71,4 +53,19 @@ class Map:
       self.moving=False
     else:
       self.moving=True
+    
+  def open_image(self,path):
+    self.path=path
+    image=pygame.image.load(path)
+    image.convert()
+    rect=image.get_rect()
+    width=max(self.game.screen_rect.width,rect.width)
+    height=max(self.game.screen_rect.height,rect.height)
+    self.image=pygame.Surface((width,height))
+    self.image.convert()
+    self.rect=self.image.get_rect()
+    self.image.blit(image,(0,0))
+    self.rect.left=int((self.game.screen_rect.width-self.rect.width)/2.0)
+    self.rect.top=int((self.game.screen_rect.height-self.rect.height)/2.0)
+    self.game.screen.blit(self.image,self.rect.topleft)
     

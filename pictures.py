@@ -8,7 +8,6 @@ import picture
 
 class Pictures:
   """Handles pictures that are placed on the background map image."""
-  
   def __init__(self,game):
     self.game=game
     self.do_not_interact_with_pictures=False
@@ -17,11 +16,6 @@ class Pictures:
     self.pictures_to_display=pygame.sprite.LayeredUpdates()
     self.pictures_selected=pygame.sprite.LayeredUpdates()
     self.picture_under_mouse_pointer=pygame.sprite.GroupSingle()
-    
-  def open_picture_file(self,path,layer,zoom):
-    pic=picture.Picture(path)
-    pic.set_layer(layer)
-    self.all_pictures.add(pic)
   
   def update(self,event):
     return_value=None
@@ -40,6 +34,11 @@ class Pictures:
     
   def draw(self):
     self.pictures_to_display.draw(self.game.screen)
+    
+  def open_picture_file(self,path,layer,zoom):
+    pic=picture.Picture(path)
+    pic.set_layer(layer)
+    self.all_pictures.add(pic)
     
   def check_mouse_motion_collision(self):
     return_value=None

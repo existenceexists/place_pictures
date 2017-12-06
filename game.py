@@ -23,9 +23,6 @@ class Game:
     self.clock = pygame.time.Clock()
     pygame.display.flip()
     
-  def exit(self):
-    self.running=False
-    
   def run(self):
     self.running=True
     while self.running is True:
@@ -45,4 +42,7 @@ class Game:
         self.gui.draw()
         self.mouse.draw()
         pygame.display.flip()
+    
+  def exit(self):
+    self.running=False
       

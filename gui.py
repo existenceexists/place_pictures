@@ -53,6 +53,47 @@ class Gui:
     #self.label_selected_picture_types_count.set_topright_position((990,90))
     #self.widgets_container.append(self.label_selected_picture_types_count)
     
+  def update(self, event):
+    return_value=False
+    self.game.pictures.do_not_interact_with_pictures=False
+    if self.FunnyGUI_dialogs_stealing_focus:
+      self.game.pictures.do_not_interact_with_pictures=True
+      if self.FunnyGUI_dialogs_stealing_focus[-1].update(event):
+        return_value=True
+      return return_value
+    rect_list=self.menu_bar.update(event)
+    if rect_list:
+      # Menu bar changed it's image because user interacted with it.
+      return_value=True
+      self.game.pictures.do_not_interact_with_pictures=True
+      self.widgets_MenuSystem_to_draw=list(self.widgets_MenuSystem_to_draw_basic)
+      for rect in rect_list:
+        self.widgets_MenuSystem_to_draw.append([self.game.screen.subsurface(rect).copy(),rect])
+      if self.menu_bar.choice:
+        if self.menu_bar.choice_index==(0,3):
+          self.game.exit()
+        elif self.menu_bar.choice_index==(3,0):
+          self.show_dialog_open_picture_file()
+    for widget in self.container_widgets_FunnyGUI:
+      if widget.update(event):
+        return_value=True
+    if self.force_everything_to_draw:
+        return_value=True
+        self.force_everything_to_draw=False
+    return return_value
+  
+  def draw(self):
+    for widget_and_rect in self.widgets_MenuSystem_to_draw:
+      self.game.screen.blit(widget_and_rect[0],widget_and_rect[1])
+    for widget in self.container_widgets_FunnyGUI:
+      widget.draw(self.game.screen)
+    
+  def show_dialog_open_picture_file(self):
+    self.path_to_picture_to_open=PathGetter.PathGetter.get()
+    if not self.path_to_picture_to_open:
+      return
+    self.create_dialog_open_picture_file()
+  
   def create_dialog_open_picture_file(self):
     self.window_dialog_open_picture_file=FunnyGUI.window.Window(width=530,height=480,backgroundColor=(0,0,0,200))
     self.window_dialog_open_picture_file.rect.center=(self.game.screen_rect.width/2,self.game.screen_rect.height/2)
@@ -102,41 +143,6 @@ class Gui:
     self.window_dialog_open_picture_file.add(FunnyGUI.button.Button(text="Cancel",onClickCallback=self.cancel_dialog_open_picture_file))
     self.window_dialog_open_picture_file.widgets[-1].rect.move_ip(position_x+150,position_y)
     
-  def update(self, event):
-    return_value=False
-    self.game.pictures.do_not_interact_with_pictures=False
-    if self.FunnyGUI_dialogs_stealing_focus:
-      self.game.pictures.do_not_interact_with_pictures=True
-      if self.FunnyGUI_dialogs_stealing_focus[-1].update(event):
-        return_value=True
-      return return_value
-    rect_list=self.menu_bar.update(event)
-    if rect_list:
-      # Menu bar changed it's image because user interacted with it.
-      return_value=True
-      self.game.pictures.do_not_interact_with_pictures=True
-      self.widgets_MenuSystem_to_draw=list(self.widgets_MenuSystem_to_draw_basic)
-      for rect in rect_list:
-        self.widgets_MenuSystem_to_draw.append([self.game.screen.subsurface(rect).copy(),rect])
-      if self.menu_bar.choice:
-        if self.menu_bar.choice_index==(0,3):
-          self.game.exit()
-        elif self.menu_bar.choice_index==(3,0):
-          self.show_dialog_open_picture_file()
-    for widget in self.container_widgets_FunnyGUI:
-      if widget.update(event):
-        return_value=True
-    if self.force_everything_to_draw:
-        return_value=True
-        self.force_everything_to_draw=False
-    return return_value
-  
-  def draw(self):
-    for widget_and_rect in self.widgets_MenuSystem_to_draw:
-      self.game.screen.blit(widget_and_rect[0],widget_and_rect[1])
-    for widget in self.container_widgets_FunnyGUI:
-      widget.draw(self.game.screen)
-  
   def confirm_dialog_open_picture_file(self):
     zoom=self.input_box_zoom.GetText()
     try:
@@ -166,13 +172,6 @@ class Gui:
     self.container_widgets_FunnyGUI.remove(self.window_dialog_open_picture_file)
     self.FunnyGUI_dialogs_stealing_focus.remove(self.window_dialog_open_picture_file)
     self.force_everything_to_draw=True
-    
-  def show_dialog_open_picture_file(self):
-    self.sgc_dialog_window_shown=True
-    self.path_to_picture_to_open=PathGetter.PathGetter.get()
-    if not self.path_to_picture_to_open:
-      return
-    self.create_dialog_open_picture_file()
     
   def is_float(self,text):
     try:
