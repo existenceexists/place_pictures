@@ -35,16 +35,12 @@ class Map:
     if event.type==pygame.KEYDOWN:
       if event.key==pygame.K_DOWN:
         self.set_moving([self.movement[0],-self.movement_step])
-        return_value=True
       elif event.key==pygame.K_UP:
         self.set_moving([self.movement[0],self.movement_step])
-        return_value=True
       elif event.key==pygame.K_RIGHT:
         self.set_moving([-self.movement_step,self.movement[1]])
-        return_value=True
       elif event.key==pygame.K_LEFT:
         self.set_moving([self.movement_step,self.movement[1]])
-        return_value=True
     elif event.type==pygame.KEYUP:
       if event.key==pygame.K_DOWN or event.key==pygame.K_UP:
         self.set_moving([self.movement[0],0])
@@ -53,6 +49,7 @@ class Map:
         self.set_moving([0,self.movement[1]])
         return_value=True
     if self.moving:
+      return_value=True
       self.rect.topleft=(self.rect.left+self.movement[0],self.rect.top+self.movement[1])
       if self.rect.left>0:
         self.rect.left=0
