@@ -55,16 +55,16 @@ class Gui:
     MenuSystem.MenuSystem.BORDER_HL = pygame.Color(200,200,200,180)
     
     #~ création des menus
-    self.menu_game = MenuSystem.MenuSystem.Menu('game', ('save','load','new','exit'))
-    self.menu_map = MenuSystem.MenuSystem.Menu('map',('zoom with pictures ','zoom without pictures','open file','create','export with pictures as one image'))
-    self.menu_layer = MenuSystem.MenuSystem.Menu('layer', ('show list','new','move','join layers','delete empty layers'))
+    self.menu_game = MenuSystem.MenuSystem.Menu('game', ('save','load','new','export as image','exit'))
     self.menu_picture = MenuSystem.MenuSystem.Menu('picture', ('open file',))
-    self.menu_selection = MenuSystem.MenuSystem.Menu('selection', ('zoom','move to layer','give a name'))
-    self.menu_select = MenuSystem.MenuSystem.Menu('select',('same file and zoom','same file','layers','all on screen','all'))
+    self.menu_select = MenuSystem.MenuSystem.Menu('select',('same file and zoom','same file','layers','all on screen','all','by name'))
+    self.menu_selection = MenuSystem.MenuSystem.Menu('selection', ('zoom','copy','move to layer','give a name','deselect','delete'))
+    self.menu_layer = MenuSystem.MenuSystem.Menu('layer', ('new layer','show list','move','join layers','display'))
+    self.menu_map = MenuSystem.MenuSystem.Menu('map',('zoom with pictures ','zoom without pictures','open file','create'))
     
     #~ création de la barre
     self.menu_bar=MenuSystem.MenuSystem.MenuBar()
-    menu_bar_rect=self.menu_bar.set((self.menu_game,self.menu_map,self.menu_layer,self.menu_picture,self.menu_selection,self.menu_select))
+    menu_bar_rect=self.menu_bar.set((self.menu_game,self.menu_picture,self.menu_select,self.menu_selection,self.menu_layer,self.menu_map))
     self.widgets_MenuSystem_to_draw_basic.append([self.game.screen.subsurface(menu_bar_rect).copy(),menu_bar_rect])
     self.widgets_MenuSystem_to_draw=list(self.widgets_MenuSystem_to_draw_basic)
     
@@ -92,9 +92,9 @@ class Gui:
       for rect in rect_list:
         self.widgets_MenuSystem_to_draw.append([self.game.screen.subsurface(rect).copy(),rect])
       if self.menu_bar.choice:
-        if self.menu_bar.choice_index==(0,3):
+        if self.menu_bar.choice_index==(0,4):
           self.game.exit()
-        elif self.menu_bar.choice_index==(3,0):
+        elif self.menu_bar.choice_index==(1,0):
           self.show_dialog_open_picture_file()
     for widget in self.container_widgets_FunnyGUI:
       if widget.update(event):
