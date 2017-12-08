@@ -1,9 +1,70 @@
-simply look at nice pictures and that's all
+Place Pictures:
+===============
 
-find nice picture file on disk
-and place it 
-and look at it how nice it is
-and do it again 
-and that's all
 
-and that's all everybody needs
+Description:
+------------
+Place Pictures is a program 
+that allows you to play with any of your pictures.
+
+Find nice picture files on disk 
+and place it on background image. 
+You can move pictures on background. 
+Use your own imagination to imagine what is being done. 
+You can imagine and play wars and fights or any other scenario. 
+Just like you played with figures when you were a child.
+The only limit is your fantasy. 
+
+
+Usage:
+------
+Run the main.py file by typing in terminal:
+python main.py
+
+Use menu bar > map > open image 
+to load your background image.
+
+Use menu bar > picture > open file 
+to load your image file.
+
+Use menu bar > game > save 
+to save your game.
+
+Use menu bar > game > load 
+to load your game.
+
+Use arrow keyboard keys 
+to move around your background image 
+if it is bigger than the application window. 
+
+Use mouse left button click to select an image 
+and click on position you want to move the image. 
+
+
+Requirements:
+-------------
+Modul Pygame is required to be installed.
+
+
+Website:
+--------
+https://github.com/existenceexists/place_pictures
+
+
+Contact:
+--------
+sentientfanda@gmail.com
+
+
+Notes:
+------
+Moduls FunnyGUI, PathGetter, MenuSystem 
+are already included in the application, 
+but they are separate projects.
+
+
+License:
+--------
+GNU General Public License version 3
+Copyright (C) 2017 František Brožka
+
