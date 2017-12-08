@@ -12,15 +12,14 @@ import pictures
 class Game:
   
   def __init__(self):
-    self.screen = pygame.display.set_mode((1000,800))
+    self.screen=pygame.display.set_mode((1000,800))
     self.screen_rect=self.screen.get_rect()
     pygame.key.set_repeat(500,500)
     self.map=maps.Map(self)
-    self.map.open_image("""images/background/teapot-dome-sky-em-from-the-boundary-trail-pasayten-wilderness.jpg""")
+    self.map.open_image("""images/landscape/teapot-dome-sky-em-from-the-boundary-trail-pasayten-wilderness.jpg""")
     self.gui = gui.Gui(self)
     self.pictures=pictures.Pictures(self)
     self.mouse=mouse.Mouse()
-    self.clock = pygame.time.Clock()
     pygame.display.flip()
     
   def run(self):

@@ -10,7 +10,7 @@ class Mouse(pygame.sprite.Sprite):
     self.rect=self.image.get_rect()
     
   def update(self,event):
-    if event.type==pygame.MOUSEMOTION:
+    if event.type==pygame.MOUSEMOTION or event.type==pygame.MOUSEBUTTONDOWN or event.type==pygame.MOUSEBUTTONUP:
       self.rect.topleft=event.pos
     
   def draw(self):

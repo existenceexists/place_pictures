@@ -11,83 +11,88 @@ class Pictures:
   def __init__(self,game):
     self.game=game
     self.do_not_interact_with_pictures=False
-    self.mouse=mouse.Mouse()
-    self.all_pictures=pygame.sprite.LayeredUpdates()
+    self.pictures_all=pygame.sprite.LayeredUpdates()
     self.pictures_to_display=pygame.sprite.LayeredUpdates()
     self.pictures_selected=pygame.sprite.LayeredUpdates()
-    self.picture_under_mouse_pointer=pygame.sprite.GroupSingle()
+    self.picture_highlighted=pygame.sprite.GroupSingle()
   
   def update(self,event):
-    return_value=None
-    if (event.type==pygame.KEYDOWN or event.type==pygame.KEYUP) and self.game.map.moving:
-      #self.all_pictures.update(movement=self.game.map.movement)
-      for picture in self.all_pictures:
-        picture.update(movement=self.game.map.movement)
-      return_value=True
-    elif event.type==pygame.MOUSEMOTION:
-      if self.check_mouse_motion_collision():
-        return_value=True
+    return_value=False
+    if self.do_not_interact_with_pictures:
+      return return_value
+    if event.type==pygame.MOUSEMOTION:
+      pictures_list=pygame.sprite.spritecollide(self.game.mouse,self.pictures_to_display,False)
+      if pictures_list:
+        if self.picture_highlighted.sprite:
+          if pictures_list[-1]!=self.picture_highlighted.sprite:
+            self.picture_highlighted.sprite.unhighlight()
+            pictures_list[-1].highlight()
+            self.picture_highlighted.empty()
+            self.picture_highlighted.add(pictures_list[-1])
+            return_value=True
+        else:
+            pictures_list[-1].highlight()
+            self.picture_highlighted.add(pictures_list[-1])
+            return_value=True
+      elif self.picture_highlighted.sprite:
+            self.picture_highlighted.sprite.unhighlight()
+            self.picture_highlighted.empty()
+            return_value=True
     elif event.type==pygame.MOUSEBUTTONUP:
-      if self.check_on_mousebuttonup(event.pos):
+      pictures_list=pygame.sprite.spritecollide(self.game.mouse,self.pictures_to_display,False)
+      if pictures_list:
+        if pictures_list!=self.pictures_selected.sprites():
+          for picture in self.pictures_selected:
+            picture.unselect()
+          pictures_list[-1].select()
+          self.pictures_selected.empty()
+          self.pictures_selected.add(pictures_list[-1])
+          return_value=True
+      elif self.pictures_selected.sprites():
+        self.selected_pictures_go_to(event.pos)
+        pictures_list=pygame.sprite.spritecollide(self.game.mouse,self.pictures_to_display,False)
         return_value=True
+        if pictures_list:
+          if self.picture_highlighted.sprite:
+            if pictures_list[-1]!=self.picture_highlighted.sprite:
+              self.picture_highlighted.sprite.unhighlight()
+              pictures_list[-1].highlight()
+              self.picture_highlighted.empty()
+              self.picture_highlighted.add(pictures_list[-1])
+              return_value=True
+          else:
+              pictures_list[-1].highlight()
+              self.picture_highlighted.add(pictures_list[-1])
+              return_value=True
     return return_value
     
   def draw(self):
-    self.pictures_to_display.draw(self.game.screen)
+    for picture in self.pictures_to_display:
+      picture.draw(self.game.screen)
     
+  def move_all_pictures_by(self,movement_x,movement_y):
+    for picture in self.pictures_all:
+       picture.move_by(movement_x,movement_y)
+  
   def open_picture_file(self,path,layer,zoom):
-    pic=picture.Picture(path)
-    pic.set_layer(layer)
-    self.all_pictures.add(pic)
+    pic=picture.Picture(path,layer,zoom,(self.game.screen_rect.width/2,self.game.screen_rect.height/2))
+    self.pictures_all.add(pic)
+    self.pictures_to_display.add(pic)
     
-  def check_mouse_motion_collision(self):
-    return_value=None
-    if self.do_not_interact_with_pictures:
-      pass
-    else:
-      pictures=pygame.sprite.spritecollide(self.mouse,self.pictures_to_display,False)
-      if pictures:
-        return_value=True
-        if not self.picture_under_mouse_pointer.sprite or self.picture_under_mouse_pointer.sprite and self.picture_under_mouse_pointer.sprite and pictures[-1]!=self.picture_under_mouse_pointer.sprite:
-          self.highlight_another_picture(pictures[-1])
-      else:
-        pass
-    
-  def check_on_mousebuttonup(self,position):
-    return_value=None
-    if self.do_not_interact_with_pictures:
-      pass
-    else:
-      pictures=pygame.sprite.spritecollide(self.mouse,self.pictures_to_display,False)
-      if pictures:
-        return_value=True
-        if pictures[-1] in self.pictures_selected.sprites():
-          self.pictures_selected.remove(pictures[-1])
-        else:
-          self.pictures_selected.add(pictures[-1])
-      else:
-        self.move_selected_pictures(position)
-    
-  def move_selected_pictures(self,position):
+  def selected_pictures_go_to(self,position):
     if self.pictures_selected.sprites():
-      left=0
+      left=self.game.screen_rect.width
       right=0
-      top=0
+      top=self.game.screen_rect.height
       bottom=0
       for pic in self.pictures_selected.sprites():
         left=min(left,pic.rect.left)
         right=max(right,pic.rect.right)
         top=min(top,pic.rect.top)
         bottom=max(bottom,pic.rect.bottom)
-      center=(int((left+(right-left)/2.0)),int(top+((bottom-top)/2.0)))
+      center=(int(left+((right-left)/2.0)),int(top+((bottom-top)/2.0)))
       for pic in self.pictures_selected.sprites():
         pic.rect.center=(position[0]+(center[0]-pic.rect.center[0]),position[1]+(center[1]-pic.rect.center[1]))
     
-  def highlight_another_picture(self,picture):
-    if self.picture_under_mouse_pointer.sprite:
-      self.picture_under_mouse_pointer.sprite.unhighlight()
-    self.picture_under_mouse_pointer.add(picture)
-    self.picture_under_mouse_pointer.sprite.higlight()
-    
   def get_number_of_layers(self):
-    return len(self.all_pictures.layers())
+    return len(self.pictures_all.layers())
