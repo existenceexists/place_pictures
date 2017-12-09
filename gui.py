@@ -78,8 +78,9 @@ class Gui:
   def update(self, event):
     return_value=False
     self.game.pictures.do_not_interact_with_pictures=False
-    if self.FunnyGUI_dialogs_stealing_focus:
+    if self.is_mouse_pointer_over_gui_widget():
       self.game.pictures.do_not_interact_with_pictures=True
+    if self.FunnyGUI_dialogs_stealing_focus:
       if self.FunnyGUI_dialogs_stealing_focus[-1].update(event):
         return_value=True
       return return_value
@@ -87,7 +88,6 @@ class Gui:
     if rect_list:
       # Menu bar changed it's image because user interacted with it.
       return_value=True
-      self.game.pictures.do_not_interact_with_pictures=True
       self.widgets_MenuSystem_to_draw=list(self.widgets_MenuSystem_to_draw_basic)
       for rect in rect_list:
         self.widgets_MenuSystem_to_draw.append([self.game.screen.subsurface(rect).copy(),rect])
@@ -109,6 +109,15 @@ class Gui:
       self.game.screen.blit(widget_and_rect[0],widget_and_rect[1])
     for widget in self.container_widgets_FunnyGUI:
       widget.draw(self.game.screen)
+  
+  def is_mouse_pointer_over_gui_widget(self):
+    for surface_and_rect in self.widgets_MenuSystem_to_draw:
+      if surface_and_rect[1].collidepoint(self.game.mouse.rect.center):
+        return True
+    for widget in self.container_widgets_FunnyGUI:
+      if widget.rect.collidepoint(self.game.mouse.rect.center):
+        return True
+    return False
     
   def show_dialog_open_picture_file(self):
     self.path_to_picture_to_open=PathGetter.PathGetter.get()

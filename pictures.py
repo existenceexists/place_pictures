@@ -41,7 +41,8 @@ class Pictures:
   def update(self,event):
     return_value=False
     if self.do_not_interact_with_pictures:
-      return return_value
+      self.do_not_interact_with_pictures=False
+      return False
     if event.type==pygame.MOUSEMOTION:
       pictures_list=pygame.sprite.spritecollide(self.game.mouse,self.pictures_to_display,False)
       if pictures_list:
