@@ -24,9 +24,9 @@
 
 import pygame
 
-import MenuSystem
-import PathGetter
 import FunnyGUI
+import FunnyMenuSystem
+import FunnyPathGetter
 
 
 class Gui:
@@ -46,24 +46,24 @@ class Gui:
     # based on exemple.py in MenuSystem package, the comments are in French
     
     #~ le module doit être initialisé après la vidéo
-    MenuSystem.MenuSystem.init()
+    FunnyMenuSystem.MenuSystem.init()
     
     #~ change la couleur du fond
-    MenuSystem.MenuSystem.BGCOLOR = pygame.Color(200,200,200,80)
-    MenuSystem.MenuSystem.FGCOLOR = pygame.Color(200,200,200,255)
-    MenuSystem.MenuSystem.BGHIGHTLIGHT = pygame.Color(0,0,0,180)
-    MenuSystem.MenuSystem.BORDER_HL = pygame.Color(200,200,200,180)
+    FunnyMenuSystem.MenuSystem.BGCOLOR = pygame.Color(200,200,200,80)
+    FunnyMenuSystem.MenuSystem.FGCOLOR = pygame.Color(200,200,200,255)
+    FunnyMenuSystem.MenuSystem.BGHIGHTLIGHT = pygame.Color(0,0,0,180)
+    FunnyMenuSystem.MenuSystem.BORDER_HL = pygame.Color(200,200,200,180)
     
     #~ création des menus
-    self.menu_game = MenuSystem.MenuSystem.Menu('game', ('info','save','load','new','export as image','exit'))
-    self.menu_picture = MenuSystem.MenuSystem.Menu('picture', ('open file',))
-    self.menu_select = MenuSystem.MenuSystem.Menu('select',('start multi selection','end multi selection','same file and zoom','same file','layers','all on screen','all','by name'))
-    self.menu_selection = MenuSystem.MenuSystem.Menu('selection', ('info','scale','copy','move to layer','give a name','deselect','delete'))
-    self.menu_layer = MenuSystem.MenuSystem.Menu('layer', ('new layer','show list','move','join layers','display'))
-    self.menu_map = MenuSystem.MenuSystem.Menu('map',('scale with pictures ','scale without pictures','open file','create'))
+    self.menu_game = FunnyMenuSystem.MenuSystem.Menu('game', ('info','save','load','new','export as image','exit'))
+    self.menu_picture = FunnyMenuSystem.MenuSystem.Menu('picture', ('open file',))
+    self.menu_select = FunnyMenuSystem.MenuSystem.Menu('select',('start multi selection','end multi selection','same file and zoom','same file','layers','all on screen','all','by name'))
+    self.menu_selection = FunnyMenuSystem.MenuSystem.Menu('selection', ('info','scale','copy','move to layer','give a name','deselect','delete'))
+    self.menu_layer = FunnyMenuSystem.MenuSystem.Menu('layer', ('new layer','show list','move','join layers','display'))
+    self.menu_map = FunnyMenuSystem.MenuSystem.Menu('map',('scale with pictures ','scale without pictures','open file','create'))
     
     #~ création de la barre
-    self.menu_bar=MenuSystem.MenuSystem.MenuBar()
+    self.menu_bar=FunnyMenuSystem.MenuSystem.MenuBar()
     menu_bar_rect=self.menu_bar.set((self.menu_game,self.menu_picture,self.menu_select,self.menu_selection,self.menu_layer,self.menu_map))
     self.widgets_MenuSystem_to_draw_basic.append([self.game.screen.subsurface(menu_bar_rect).copy(),menu_bar_rect])
     self.widgets_MenuSystem_to_draw=list(self.widgets_MenuSystem_to_draw_basic)
@@ -120,7 +120,7 @@ class Gui:
     return False
     
   def show_dialog_open_picture_file(self):
-    self.path_to_picture_to_open=PathGetter.PathGetter.get()
+    self.path_to_picture_to_open=FunnyPathGetter.PathGetter.get()
     if not self.path_to_picture_to_open:
       return
     self.create_dialog_open_picture_file()
