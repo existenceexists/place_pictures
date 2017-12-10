@@ -57,7 +57,7 @@ class Gui:
     #~ création des menus
     self.menu_game = FunnyMenuSystem.MenuSystem.Menu('game', ('info','save','load','new','export as image','exit'))
     self.menu_picture = FunnyMenuSystem.MenuSystem.Menu('picture', ('open file',))
-    self.menu_select = FunnyMenuSystem.MenuSystem.Menu('select',('start multi selection','end multi selection','same file and zoom','same file','layers','all on screen','all','by name'))
+    self.menu_select = FunnyMenuSystem.MenuSystem.Menu('select',('start multi selection','end multi selection','same file and scale','same file','layers','all on screen','all','by name'))
     self.menu_selection = FunnyMenuSystem.MenuSystem.Menu('selection', ('info','scale','copy','move to layer','give a name','deselect','delete'))
     self.menu_layer = FunnyMenuSystem.MenuSystem.Menu('layer', ('new layer','show list','move','join layers','display'))
     self.menu_map = FunnyMenuSystem.MenuSystem.Menu('map',('scale with pictures ','scale without pictures','open file','create'))
@@ -126,62 +126,67 @@ class Gui:
     self.create_dialog_open_picture_file()
   
   def create_dialog_open_picture_file(self):
-    self.window_dialog_open_picture_file=FunnyGUI.window.Window(width=530,height=480,backgroundColor=(0,0,0,200))
-    self.window_dialog_open_picture_file.rect.center=(self.game.screen_rect.width/2,self.game.screen_rect.height/2)
-    self.container_widgets_FunnyGUI.append(self.window_dialog_open_picture_file)
-    self.FunnyGUI_dialogs_stealing_focus.append(self.window_dialog_open_picture_file)
+    width=580
     position_x=50
     position_y=50
-    self.window_dialog_open_picture_file.add(FunnyGUI.label.Label(text="""Open and show picture file."""))
-    self.window_dialog_open_picture_file.widgets[-1].rect.move_ip(position_x,position_y)
+    widgets=[]
+    widgets.append(FunnyGUI.label.Label(text="""Open and show picture file."""))
+    widgets[-1].rect.move_ip(position_x,position_y)
     position_y=position_y+50
-    self.window_dialog_open_picture_file.add(FunnyGUI.label.Label(text="""Enter zoom percent."""))
-    self.window_dialog_open_picture_file.widgets[-1].rect.move_ip(position_x,position_y)
+    widgets.append(FunnyGUI.label.Label(text="""Enter scale percent."""))
+    widgets[-1].rect.move_ip(position_x,position_y)
     position_y=position_y+30
-    self.window_dialog_open_picture_file.add(FunnyGUI.label.Label(text="""The size of the new picture will be scaled"""))
-    self.window_dialog_open_picture_file.widgets[-1].rect.move_ip(position_x,position_y)
+    widgets.append(FunnyGUI.label.Label(text="""The size of the new picture will be scaled"""))
+    widgets[-1].rect.move_ip(position_x,position_y)
     position_y=position_y+30
-    self.window_dialog_open_picture_file.add(FunnyGUI.label.Label(text="""to the given percent size of the original picture."""))
-    self.window_dialog_open_picture_file.widgets[-1].rect.move_ip(position_x,position_y)
+    widgets.append(FunnyGUI.label.Label(text="""to the given percent size of the original picture."""))
+    widgets[-1].rect.move_ip(position_x,position_y)
     position_y=position_y+30
-    self.window_dialog_open_picture_file.add(FunnyGUI.label.Label(text="""The number can be an integer or float number between 0 and infinity."""))
-    self.window_dialog_open_picture_file.widgets[-1].rect.move_ip(position_x,position_y)
+    widgets.append(FunnyGUI.label.Label(text="""The number can be an integer or floating point number between 0 and infinity."""))
+    widgets[-1].rect.move_ip(position_x,position_y)
     position_y=position_y+30
-    self.input_box_zoom=FunnyGUI.inputbox.InputBox()
-    self.input_box_zoom.SetText("100")
-    self.window_dialog_open_picture_file.add(self.input_box_zoom)
-    self.window_dialog_open_picture_file.widgets[-1].rect.move_ip(position_x,position_y)
+    self.input_box_scale=FunnyGUI.inputbox.InputBox()
+    self.input_box_scale.SetText("100")
+    widgets.append(self.input_box_scale)
+    widgets[-1].rect.move_ip(position_x,position_y)
     position_y=position_y+50
-    self.window_dialog_open_picture_file.add(FunnyGUI.label.Label(text="""Enter layer number."""))
-    self.window_dialog_open_picture_file.widgets[-1].rect.move_ip(position_x,position_y)
+    widgets.append(FunnyGUI.label.Label(text="""Enter layer number."""))
+    widgets[-1].rect.move_ip(position_x,position_y)
     position_y=position_y+30
-    self.window_dialog_open_picture_file.add(FunnyGUI.label.Label(text="""The new picture will be moved into the layer."""))
-    self.window_dialog_open_picture_file.widgets[-1].rect.move_ip(position_x,position_y)
+    widgets.append(FunnyGUI.label.Label(text="""The new picture will be moved into the layer."""))
+    widgets[-1].rect.move_ip(position_x,position_y)
     position_y=position_y+30
     top_layer=self.game.pictures.get_number_of_layers()
     if top_layer==0:
       top_layer=1
-    self.window_dialog_open_picture_file.add(FunnyGUI.label.Label(text="""The number can be an integer number between 1 and """+str(top_layer)+""" ."""))
-    self.window_dialog_open_picture_file.widgets[-1].rect.move_ip(position_x,position_y)
+    widgets.append(FunnyGUI.label.Label(text="""The number can be an integer number between 1 and """+str(top_layer)+""" ."""))
+    widgets[-1].rect.move_ip(position_x,position_y)
     position_y=position_y+30
     self.input_box_layer=FunnyGUI.inputbox.InputBox()
     self.input_box_layer.SetText("1")
-    self.window_dialog_open_picture_file.add(self.input_box_layer)
-    self.window_dialog_open_picture_file.widgets[-1].rect.move_ip(position_x,position_y)
+    widgets.append(self.input_box_layer)
+    widgets[-1].rect.move_ip(position_x,position_y)
     position_y=position_y+50
-    self.window_dialog_open_picture_file.add(FunnyGUI.button.Button(text="OK",onClickCallback=self.confirm_dialog_open_picture_file))
-    self.window_dialog_open_picture_file.widgets[-1].rect.move_ip(position_x+100,position_y)
-    self.window_dialog_open_picture_file.add(FunnyGUI.button.Button(text="Cancel",onClickCallback=self.cancel_dialog_open_picture_file))
-    self.window_dialog_open_picture_file.widgets[-1].rect.move_ip(position_x+150,position_y)
+    widgets.append(FunnyGUI.button.Button(text="OK",onClickCallback=self.confirm_dialog_open_picture_file,fontSize=20))
+    widgets[-1].rect.topright=((width/2)-20,position_y)
+    widgets.append(FunnyGUI.button.Button(text="Cancel",onClickCallback=self.cancel_dialog_open_picture_file,fontSize=20))
+    widgets[-1].rect.topleft=((width/2)+20,position_y)
+    height=position_y+70
+    self.window_dialog_open_picture_file=FunnyGUI.window.Window(width=width,height=height,backgroundColor=(0,0,0,200))
+    self.window_dialog_open_picture_file.rect.center=(self.game.screen_rect.width/2,self.game.screen_rect.height/2)
+    for widget in widgets:
+      self.window_dialog_open_picture_file.add(widget)
+    self.container_widgets_FunnyGUI.append(self.window_dialog_open_picture_file)
+    self.FunnyGUI_dialogs_stealing_focus.append(self.window_dialog_open_picture_file)
     
   def confirm_dialog_open_picture_file(self):
-    zoom=self.input_box_zoom.GetText()
+    scale=self.input_box_scale.GetText()
     try:
-      assert(self.is_float(zoom))
-      zoom=float(zoom)
-      assert(zoom>=0)
+      assert(self.is_float(scale))
+      scale=float(scale)
+      assert(scale>=0)
     except AssertionError:
-      self.display_message_window(["You have not filled zoom number field correctly."])
+      self.display_message_window(["You have not filled scale number field correctly."])
       return
     layer=self.input_box_layer.GetText()
     try:
@@ -197,7 +202,7 @@ class Gui:
     self.container_widgets_FunnyGUI.remove(self.window_dialog_open_picture_file)
     self.FunnyGUI_dialogs_stealing_focus.remove(self.window_dialog_open_picture_file)
     self.force_everything_to_draw=True
-    self.game.pictures.open_picture_file(self.path_to_picture_to_open,layer,zoom)
+    self.game.pictures.open_picture_file(self.path_to_picture_to_open,layer,scale)
     
   def cancel_dialog_open_picture_file(self):
     self.container_widgets_FunnyGUI.remove(self.window_dialog_open_picture_file)
