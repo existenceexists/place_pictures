@@ -37,7 +37,7 @@ class Game:
     self.screen_rect=self.screen.get_rect()
     pygame.key.set_repeat(500,500)
     self.map=maps.Map(self)
-    self.map.open_image("""images/by_others/landscape/teapot-dome-sky-em-from-the-boundary-trail-pasayten-wilderness.jpg""")
+    self.map.create_map(2000,2000,0,0,0)
     self.gui = gui.Gui(self)
     self.pictures=pictures.Pictures(self)
     self.mouse=mouse.Mouse()

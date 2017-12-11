@@ -83,6 +83,14 @@ class Map:
   def open_image(self,path):
     self.path=path
     image=pygame.image.load(path).convert_alpha()
+    self.set_background_image(image)
+  
+  def create_map(self,width,height,rgb_red,rgb_green,rgb_blue):
+    image=pygame.Surface((width,height)).convert_alpha()
+    image.fill(pygame.Color(rgb_red,rgb_green,rgb_blue))
+    self.set_background_image(image)
+  
+  def set_background_image(self,image):
     rect=image.get_rect()
     width=rect.width
     height=rect.height

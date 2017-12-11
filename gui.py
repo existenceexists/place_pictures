@@ -38,8 +38,9 @@ class Gui:
     self.widgets_MenuSystem_to_draw_basic=[]
     self.widgets_MenuSystem_to_draw=[]
     self.FunnyGUI_dialogs_stealing_focus=[]
+    self.window_background_color=(0,0,0,200)
+    self.window_message_background_color=(100,0,0,200)
     self.create_gui()
-    self.path_picture_to_open=None
     self.force_everything_to_draw=False
 
   def create_gui(self):
@@ -96,6 +97,8 @@ class Gui:
           self.game.exit()
         elif self.menu_bar.choice_index==(1,0):
           self.show_dialog_open_picture_file()
+        elif self.menu_bar.choice_index==(5,3):
+          self.show_dialog_create_map()
     for widget in self.container_widgets_FunnyGUI:
       if widget.update(event):
         return_value=True
@@ -120,67 +123,68 @@ class Gui:
     return False
     
   def show_dialog_open_picture_file(self):
-    self.path_to_picture_to_open=FunnyPathGetter.PathGetter.get()
-    if not self.path_to_picture_to_open:
+    path_to_picture_to_open=FunnyPathGetter.PathGetter.get()
+    if not path_to_picture_to_open:
       return
-    self.create_dialog_open_picture_file()
+    self.create_dialog_open_picture_file(path_to_picture_to_open)
   
-  def create_dialog_open_picture_file(self):
+  def create_dialog_open_picture_file(self,path_to_picture_to_open):
     width=580
     position_x=50
     position_y=50
     widgets=[]
     widgets.append(FunnyGUI.label.Label(text="""Open and show picture file."""))
-    widgets[-1].rect.move_ip(position_x,position_y)
+    widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+50
     widgets.append(FunnyGUI.label.Label(text="""Enter scale percent."""))
-    widgets[-1].rect.move_ip(position_x,position_y)
+    widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+30
     widgets.append(FunnyGUI.label.Label(text="""The size of the new picture will be scaled"""))
-    widgets[-1].rect.move_ip(position_x,position_y)
+    widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+30
     widgets.append(FunnyGUI.label.Label(text="""to the given percent size of the original picture."""))
-    widgets[-1].rect.move_ip(position_x,position_y)
+    widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+30
     widgets.append(FunnyGUI.label.Label(text="""The number can be an integer or floating point number between 0 and infinity."""))
-    widgets[-1].rect.move_ip(position_x,position_y)
+    widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+30
-    self.input_box_scale=FunnyGUI.inputbox.InputBox()
-    self.input_box_scale.SetText("100")
-    widgets.append(self.input_box_scale)
-    widgets[-1].rect.move_ip(position_x,position_y)
+    input_box_scale=FunnyGUI.inputbox.InputBox()
+    input_box_scale.SetText("100")
+    widgets.append(input_box_scale)
+    widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+50
     widgets.append(FunnyGUI.label.Label(text="""Enter layer number."""))
-    widgets[-1].rect.move_ip(position_x,position_y)
+    widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+30
     widgets.append(FunnyGUI.label.Label(text="""The new picture will be moved into the layer."""))
-    widgets[-1].rect.move_ip(position_x,position_y)
+    widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+30
     top_layer=self.game.pictures.get_number_of_layers()
     if top_layer==0:
       top_layer=1
     widgets.append(FunnyGUI.label.Label(text="""The number can be an integer number between 1 and """+str(top_layer)+""" ."""))
-    widgets[-1].rect.move_ip(position_x,position_y)
+    widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+30
-    self.input_box_layer=FunnyGUI.inputbox.InputBox()
-    self.input_box_layer.SetText("1")
-    widgets.append(self.input_box_layer)
-    widgets[-1].rect.move_ip(position_x,position_y)
+    input_box_layer=FunnyGUI.inputbox.InputBox()
+    input_box_layer.SetText("1")
+    widgets.append(input_box_layer)
+    widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+50
     widgets.append(FunnyGUI.button.Button(text="OK",onClickCallback=self.confirm_dialog_open_picture_file,fontSize=20))
     widgets[-1].rect.topright=((width/2)-20,position_y)
-    widgets.append(FunnyGUI.button.Button(text="Cancel",onClickCallback=self.cancel_dialog_open_picture_file,fontSize=20))
+    widgets.append(FunnyGUI.button.Button(text="Cancel",onClickCallback=self.remove_window,fontSize=20))
     widgets[-1].rect.topleft=((width/2)+20,position_y)
     height=position_y+70
-    self.window_dialog_open_picture_file=FunnyGUI.window.Window(width=width,height=height,backgroundColor=(0,0,0,200))
-    self.window_dialog_open_picture_file.rect.center=(self.game.screen_rect.width/2,self.game.screen_rect.height/2)
+    window=FunnyGUI.window.Window(width=width,height=height,backgroundColor=self.window_background_color)
+    window.rect.center=(self.game.screen_rect.width/2,self.game.screen_rect.height/2)
     for widget in widgets:
-      self.window_dialog_open_picture_file.add(widget)
-    self.container_widgets_FunnyGUI.append(self.window_dialog_open_picture_file)
-    self.FunnyGUI_dialogs_stealing_focus.append(self.window_dialog_open_picture_file)
+      window.add(widget)
+    widgets[-1].callbackArgs=(window,)
+    widgets[-2].callbackArgs=(window,input_box_scale,input_box_layer,path_to_picture_to_open)
+    self.add_window(window)
     
-  def confirm_dialog_open_picture_file(self):
-    scale=self.input_box_scale.GetText()
+  def confirm_dialog_open_picture_file(self,window,input_box_scale,input_box_layer,path_to_picture_to_open):
+    scale=input_box_scale.GetText()
     try:
       assert(self.is_float(scale))
       scale=float(scale)
@@ -188,7 +192,7 @@ class Gui:
     except AssertionError:
       self.display_message_window(["You have not filled scale number field correctly."])
       return
-    layer=self.input_box_layer.GetText()
+    layer=input_box_layer.GetText()
     try:
       assert(self.is_integer(layer))
       layer=int(layer)
@@ -199,15 +203,8 @@ class Gui:
     except AssertionError:
       self.display_message_window(["You have not filled layer number field correctly."])
       return
-    self.container_widgets_FunnyGUI.remove(self.window_dialog_open_picture_file)
-    self.FunnyGUI_dialogs_stealing_focus.remove(self.window_dialog_open_picture_file)
-    self.force_everything_to_draw=True
-    self.game.pictures.open_picture_file(self.path_to_picture_to_open,layer,scale)
-    
-  def cancel_dialog_open_picture_file(self):
-    self.container_widgets_FunnyGUI.remove(self.window_dialog_open_picture_file)
-    self.FunnyGUI_dialogs_stealing_focus.remove(self.window_dialog_open_picture_file)
-    self.force_everything_to_draw=True
+    self.remove_window(window)
+    self.game.pictures.open_picture_file(path_to_picture_to_open,layer,scale)
     
   def is_float(self,text):
     try:
@@ -225,32 +222,149 @@ class Gui:
     else:
       return True
   
-  def display_message_window(self,text_list):
-    height=50
-    width=0
-    for text in text_list:
-      height=height+30
-      width=max(width,pygame.font.Font(pygame.font.match_font("freesans,sansserif,microsoftsansserif,arial,dejavusans,verdana,timesnewroman,helvetica"),14).size(text)[0])
-    height=height+50
-    width=width+(2*50)
-    if width>self.game.screen_rect.width:
-      width=self.game.screen_rect.widt
-    if height>self.game.screen_rect.height:
-      height=self.game.screen_rect.height
-    self.message_window=FunnyGUI.window.Window(width=width,height=height,backgroundColor=(100,0,0,200))
-    self.message_window.rect.center=(self.game.screen_rect.width/2,self.game.screen_rect.height/2)
-    self.container_widgets_FunnyGUI.append(self.message_window)
-    self.FunnyGUI_dialogs_stealing_focus.append(self.message_window)
+  def show_dialog_create_map(self):
+    width=580
     position_x=50
     position_y=50
-    for text in text_list:
-      self.message_window.add(FunnyGUI.label.Label(text=text))
-      self.message_window.widgets[-1].rect.move_ip(position_x,position_y)
-      position_y=position_y+30
-    self.message_window.add(FunnyGUI.button.Button(text="OK",onClickCallback=self.dismiss_message_window,normalColor=(255,255,255,255),highlightedColor=(255,255,0,255)))
-    self.message_window.widgets[-1].rect.center=(width/2,position_y+10)
+    widgets=[]
+    widgets.append(FunnyGUI.label.Label(text="""Create background image filled with solid color."""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y=position_y+50
+    widgets.append(FunnyGUI.label.Label(text="""Enter size of the background image:"""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y=position_y+30
+    widgets.append(FunnyGUI.label.Label(text="""Size of the current background image is: width: """+str(self.game.map.rect.width)+""", height: """+str(self.game.map.rect.height)))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y=position_y+30
+    widgets.append(FunnyGUI.label.Label(text="""width:"""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    input_box_width=FunnyGUI.inputbox.InputBox()
+    widgets.append(input_box_width)
+    widgets[-1].rect.topleft=(position_x+60,position_y)
+    position_y=position_y+30
+    widgets.append(FunnyGUI.label.Label(text="""height:"""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    input_box_height=FunnyGUI.inputbox.InputBox()
+    widgets.append(input_box_height)
+    widgets[-1].rect.topleft=(position_x+60,position_y)
+    position_y=position_y+50
+    widgets.append(FunnyGUI.label.Label(text="""Enter RGB color value the image will be filled with:"""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y=position_y+30
+    widgets.append(FunnyGUI.label.Label(text="""Values can be integer numbers between 0 and 255."""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y=position_y+30
+    widgets.append(FunnyGUI.label.Label(text="""Red:"""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    input_box_rgb_red=FunnyGUI.inputbox.InputBox()
+    widgets.append(input_box_rgb_red)
+    widgets[-1].rect.topleft=(position_x+60,position_y)
+    position_y=position_y+30
+    widgets.append(FunnyGUI.label.Label(text="""Green:"""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    input_box_rgb_green=FunnyGUI.inputbox.InputBox()
+    widgets.append(input_box_rgb_green)
+    widgets[-1].rect.topleft=(position_x+60,position_y)
+    position_y=position_y+30
+    widgets.append(FunnyGUI.label.Label(text="""Blue:"""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    input_box_rgb_blue=FunnyGUI.inputbox.InputBox()
+    widgets.append(input_box_rgb_blue)
+    widgets[-1].rect.topleft=(position_x+60,position_y)
+    position_y=position_y+30
+    position_y=position_y+50
+    widgets.append(FunnyGUI.button.Button(text="OK",onClickCallback=self.confirm_dialog_create_map,fontSize=20))
+    widgets[-1].rect.topright=((width/2)-20,position_y)
+    widgets.append(FunnyGUI.button.Button(text="Cancel",onClickCallback=self.remove_window,fontSize=20))
+    widgets[-1].rect.topleft=((width/2)+20,position_y)
+    height=position_y+70
+    window=FunnyGUI.window.Window(width=width,height=height,backgroundColor=self.window_background_color)
+    window.rect.center=(self.game.screen_rect.width/2,self.game.screen_rect.height/2)
+    for widget in widgets:
+      window.add(widget)
+    widgets[-1].callbackArgs=(window,)
+    widgets[-2].callbackArgs=(window,input_box_width,input_box_height,input_box_rgb_red,input_box_rgb_green,input_box_rgb_blue)
+    self.add_window(window)
   
-  def dismiss_message_window(self):
-    self.container_widgets_FunnyGUI.remove(self.message_window)
-    self.FunnyGUI_dialogs_stealing_focus.remove(self.message_window)
+  def confirm_dialog_create_map(self,window,input_box_width,input_box_height,input_box_rgb_red,input_box_rgb_green,input_box_rgb_blue):
+    width=input_box_width.GetText()
+    try:
+      assert(self.is_integer(width))
+      width=int(width)
+      assert(width>=0)
+    except AssertionError:
+      self.display_message_window(["You have not filled width number field correctly."])
+      return
+    height=input_box_height.GetText()
+    try:
+      assert(self.is_integer(height))
+      height=int(height)
+      assert(height>=0)
+    except AssertionError:
+      self.display_message_window(["You have not filled height number field correctly."])
+      return
+    rgb_red=input_box_rgb_red.GetText()
+    try:
+      assert(self.is_integer(rgb_red))
+      rgb_red=int(rgb_red)
+      assert(rgb_red>=0)
+      assert(rgb_red<=255)
+    except AssertionError:
+      self.display_message_window(["You have not filled RGB color Red number field correctly."])
+      return
+    rgb_green=input_box_rgb_green.GetText()
+    try:
+      assert(self.is_integer(rgb_green))
+      rgb_green=int(rgb_green)
+      assert(rgb_green>=0)
+      assert(rgb_green<=255)
+    except AssertionError:
+      self.display_message_window(["You have not filled RGB color Green number field correctly."])
+      return
+    rgb_blue=input_box_rgb_blue.GetText()
+    try:
+      assert(self.is_integer(rgb_blue))
+      rgb_blue=int(rgb_blue)
+      assert(rgb_blue>=0)
+      assert(rgb_blue<=255)
+    except AssertionError:
+      self.display_message_window(["You have not filled RGB color Blue number field correctly."])
+      return
+    self.remove_window(window)
+    self.game.map.create_map(width,height,rgb_red,rgb_green,rgb_blue)
+    
+  def display_message_window(self,text_list):
+    width=0
+    position_x=50
+    position_y=50
+    widgets=[]
+    for text in text_list:
+      widgets.append(FunnyGUI.label.Label(text=text))
+      widgets[-1].rect.topleft=(position_x,position_y)
+      width=max(width,widgets[-1].rect.width)
+      position_y=position_y+30
+    widgets.append(FunnyGUI.button.Button(text="OK",onClickCallback=self.remove_window,normalColor=(255,255,255,255),highlightedColor=(255,255,0,255)))
+    position_y=position_y+10
+    width=width+(2*50)
+    widgets[-1].rect.midtop=(width/2,position_y)
+    height=position_y+50
+    if width>self.game.screen_rect.width:
+      width=self.game.screen_rect.width
+    if height>self.game.screen_rect.height:
+      height=self.game.screen_rect.height
+    window=FunnyGUI.window.Window(width=width,height=height,backgroundColor=self.window_message_background_color)
+    window.rect.center=(self.game.screen_rect.width/2,self.game.screen_rect.height/2)
+    for widget in widgets:
+      window.add(widget)
+    widgets[-1].callbackArgs=(window,)
+    self.add_window(window)
+  
+  def add_window(self,window):
+    self.container_widgets_FunnyGUI.append(window)
+    self.FunnyGUI_dialogs_stealing_focus.append(window)
+    self.force_everything_to_draw=True
+  
+  def remove_window(self,window):
+    self.container_widgets_FunnyGUI.remove(window)
+    self.FunnyGUI_dialogs_stealing_focus.remove(window)
     self.force_everything_to_draw=True
