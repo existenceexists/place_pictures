@@ -97,6 +97,8 @@ class Gui:
           self.game.exit()
         elif self.menu_bar.choice_index==(1,0):
           self.show_dialog_open_picture_file()
+        elif self.menu_bar.choice_index==(5,2):
+          self.show_dialog_open_map_file()
         elif self.menu_bar.choice_index==(5,3):
           self.show_dialog_create_map()
     for widget in self.container_widgets_FunnyGUI:
@@ -257,6 +259,62 @@ class Gui:
       return
     self.remove_window(window)
     self.game.pictures.open_picture_file(path_to_picture_to_open,layer,scale)
+    
+  def show_dialog_open_map_file(self):
+    path_to_picture_to_open=FunnyPathGetter.PathGetter.get()
+    if not path_to_picture_to_open:
+      return
+    self.create_dialog_open_map_file(path_to_picture_to_open)
+  
+  def create_dialog_open_map_file(self,path_to_picture_to_open):
+    width=580
+    position_x=50
+    position_y=50
+    widgets=[]
+    widgets.append(FunnyGUI.label.Label(text="""Open and show background picture file."""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y=position_y+50
+    widgets.append(FunnyGUI.label.Label(text="""Enter scale percent."""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y=position_y+30
+    widgets.append(FunnyGUI.label.Label(text="""The size of the new picture will be scaled"""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y=position_y+30
+    widgets.append(FunnyGUI.label.Label(text="""to the given percent size of the original picture."""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y=position_y+30
+    widgets.append(FunnyGUI.label.Label(text="""The number can be an integer or floating point number between 0 and infinity."""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y=position_y+30
+    input_box_scale=FunnyGUI.inputbox.InputBox()
+    input_box_scale.SetText("100")
+    widgets.append(input_box_scale)
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y=position_y+50
+    widgets.append(FunnyGUI.button.Button(text="OK",onClickCallback=self.confirm_dialog_open_map_file,fontSize=20))
+    widgets[-1].rect.topright=((width/2)-20,position_y)
+    widgets.append(FunnyGUI.button.Button(text="Cancel",onClickCallback=self.remove_window,fontSize=20))
+    widgets[-1].rect.topleft=((width/2)+20,position_y)
+    height=position_y+70
+    window=FunnyGUI.window.Window(width=width,height=height,backgroundColor=self.window_background_color)
+    window.rect.center=(self.game.screen_rect.width/2,self.game.screen_rect.height/2)
+    for widget in widgets:
+      window.add(widget)
+    widgets[-1].callbackArgs=(window,)
+    widgets[-2].callbackArgs=(window,input_box_scale,path_to_picture_to_open)
+    self.add_window(window)
+    
+  def confirm_dialog_open_map_file(self,window,input_box_scale,path_to_picture_to_open):
+    scale=input_box_scale.GetText()
+    try:
+      assert(self.is_float(scale))
+      scale=float(scale)
+      assert(scale>=0)
+    except AssertionError:
+      self.display_message_window(["You have not filled scale number field correctly."])
+      return
+    self.remove_window(window)
+    self.game.map.open_image(path_to_picture_to_open,scale)
   
   def show_dialog_create_map(self):
     width=580

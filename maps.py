@@ -80,9 +80,14 @@ class Map:
     else:
       self.moving=True
     
-  def open_image(self,path):
+  def open_image(self,path,scale):
     self.path=path
-    image=pygame.image.load(path).convert_alpha()
+    image_unscaled=pygame.image.load(path).convert_alpha()
+    image_unscaled_rect=image_unscaled.get_rect()
+    scale=float(scale)/100.0# convert from percent
+    width=int(round(image_unscaled_rect.width*scale))
+    height=int(round(image_unscaled_rect.height*scale))
+    image=pygame.transform.scale(image_unscaled,(width,height))
     self.set_background_image(image)
   
   def create_map(self,width,height,rgb_red,rgb_green,rgb_blue):
