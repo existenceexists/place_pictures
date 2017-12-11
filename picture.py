@@ -27,15 +27,15 @@ import pygame
 
 class Picture(pygame.sprite.Sprite):
   
-  def __init__(self,path,layer,zoom,position):
+  def __init__(self,path,layer,scale,position):
     pygame.sprite.Sprite.__init__(self)
     self.path=path
     self.set_layer(layer)
     image_unscaled=pygame.image.load(path).convert_alpha()
     image_unscaled_rect=image_unscaled.get_rect()
-    zoom=float(zoom)/100.0# convert from percent
-    width=int(round(image_unscaled_rect.width*zoom))
-    height=int(round(image_unscaled_rect.height*zoom))
+    scale=float(scale)/100.0# convert from percent
+    width=int(round(image_unscaled_rect.width*scale))
+    height=int(round(image_unscaled_rect.height*scale))
     self.image_normal=pygame.transform.scale(image_unscaled,(width,height))
     self.rect_normal=self.image_normal.get_rect()
     self.image_highlighted=pygame.Surface((self.rect_normal.width+2,self.rect_normal.height+2)).convert_alpha()
