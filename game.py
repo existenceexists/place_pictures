@@ -22,6 +22,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+import argparse
 import pygame
 
 import gui
@@ -33,7 +34,8 @@ import pictures
 class Game:
   
   def __init__(self):
-    self.screen=pygame.display.set_mode((1000,800))
+    args=self.parse_command_line_arguments()
+    self.screen=pygame.display.set_mode((args.width,args.height))
     self.screen_rect=self.screen.get_rect()
     pygame.key.set_repeat(500,500)
     self.map=maps.Map(self)
@@ -43,6 +45,12 @@ class Game:
     self.mouse=mouse.Mouse()
     pygame.display.flip()
     
+  def parse_command_line_arguments(self):
+    parser=argparse.ArgumentParser(description='Place Pictures is a program that allows you to play with any of your pictures.')
+    parser.add_argument('-w','--width',dest='width',nargs='?',type=int,default=1000,help='Width of window displayed.')
+    parser.add_argument('-e','--height',dest='height',nargs='?',type=int,default=700,help='Height of window displayed.')
+    return parser.parse_args()
+  
   def run(self):
     self.running=True
     while self.running is True:
