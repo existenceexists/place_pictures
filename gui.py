@@ -89,7 +89,7 @@ class Gui:
     if rect_list:
       # Menu bar changed it's image because user interacted with it.
       return_value=True
-      self.widgets_MenuSystem_to_draw=list(self.widgets_MenuSystem_to_draw_basic)
+      self.widgets_MenuSystem_to_draw=[]
       for rect in rect_list:
         self.widgets_MenuSystem_to_draw.append([self.game.screen.subsurface(rect).copy(),rect])
       if self.menu_bar.choice:
@@ -165,12 +165,12 @@ class Gui:
     width=width+(2*50)
     widgets[-1].rect.midtop=(width/2,position_y)
     height=position_y+50
-    if width>self.game.screen_rect.width:
-      width=self.game.screen_rect.width
-    if height>self.game.screen_rect.height:
-      height=self.game.screen_rect.height
+    if width>self.game.map.display_area_rect.width:
+      width=self.game.map.display_area_rect.width
+    if height>self.game.map.display_area_rect.height:
+      height=self.game.map.display_area_rect.height
     window=FunnyGUI.window.Window(width=width,height=height,backgroundColor=self.window_message_background_color)
-    window.rect.center=(self.game.screen_rect.width/2,self.game.screen_rect.height/2)
+    window.rect.center=(self.game.map.display_area_rect.center[0],self.game.map.display_area_rect.center[1])
     for widget in widgets:
       window.add(widget)
     widgets[-1].callbackArgs=(window,)
@@ -230,7 +230,7 @@ class Gui:
     widgets[-1].rect.topleft=((width/2)+20,position_y)
     height=position_y+70
     window=FunnyGUI.window.Window(width=width,height=height,backgroundColor=self.window_background_color)
-    window.rect.center=(self.game.screen_rect.width/2,self.game.screen_rect.height/2)
+    window.rect.center=(self.game.map.display_area_rect.center[0],self.game.map.display_area_rect.center[1])
     for widget in widgets:
       window.add(widget)
     widgets[-1].callbackArgs=(window,)
@@ -297,7 +297,7 @@ class Gui:
     widgets[-1].rect.topleft=((width/2)+20,position_y)
     height=position_y+70
     window=FunnyGUI.window.Window(width=width,height=height,backgroundColor=self.window_background_color)
-    window.rect.center=(self.game.screen_rect.width/2,self.game.screen_rect.height/2)
+    window.rect.center=(self.game.map.display_area_rect.center[0],self.game.map.display_area_rect.center[1])
     for widget in widgets:
       window.add(widget)
     widgets[-1].callbackArgs=(window,)
@@ -373,7 +373,7 @@ class Gui:
     widgets[-1].rect.topleft=((width/2)+20,position_y)
     height=position_y+70
     window=FunnyGUI.window.Window(width=width,height=height,backgroundColor=self.window_background_color)
-    window.rect.center=(self.game.screen_rect.width/2,self.game.screen_rect.height/2)
+    window.rect.center=(self.game.map.display_area_rect.center[0],self.game.map.display_area_rect.center[1])
     for widget in widgets:
       window.add(widget)
     widgets[-1].callbackArgs=(window,)

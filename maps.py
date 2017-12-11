@@ -32,6 +32,12 @@ class Map:
     self.moving=False
     self.movement_step=10
     self.movement=[0,0]
+    menu_bar_height=19
+    top=menu_bar_height+1
+    self.display_area_rect=pygame.Rect(0,top,self.game.screen_rect.width,self.game.screen_rect.height-top)
+    self.display_area=self.game.screen.subsurface(self.display_area_rect)
+    self.display_area_rect_top_zero=self.display_area.get_rect().copy()
+    self.display_area_rect_top_zero.top=0
     
   def update(self,event):
     return_value=False
@@ -57,12 +63,12 @@ class Map:
       self.rect.topleft=(self.rect.left+self.movement[0],self.rect.top+self.movement[1])
       if self.rect.left>0:
         self.rect.left=0
-      if self.rect.right<self.game.screen_rect.right:
-        self.rect.right=self.game.screen_rect.right
+      if self.rect.right<self.display_area_rect_top_zero.right:
+        self.rect.right=self.display_area_rect_top_zero.right
       if self.rect.top>0:
         self.rect.top=0
-      if self.rect.bottom<self.game.screen_rect.bottom:
-        self.rect.bottom=self.game.screen_rect.bottom
+      if self.rect.bottom<self.display_area_rect_top_zero.bottom:
+        self.rect.bottom=self.display_area_rect_top_zero.bottom
     movement_x=self.rect.left-rect_left
     movement_y=self.rect.top-rect_top
     if movement_x!=0 or movement_y!=0:
@@ -71,9 +77,9 @@ class Map:
     return return_value
     
   def draw(self):
-    self.game.screen.blit(self.image,self.rect.topleft)
+    self.display_area.blit(self.image,self.rect.topleft)
     
-  def set_moving(self, movement):
+  def set_moving(self,movement):
     self.movement=movement
     if movement==[0,0]:
       self.moving=False
@@ -99,16 +105,16 @@ class Map:
     rect=image.get_rect()
     width=rect.width
     height=rect.height
-    if self.game.screen_rect.width>width:
-      width=self.game.screen_rect.width
-    if self.game.screen_rect.height>height:
-      height=self.game.screen_rect.height
+    if self.display_area_rect.width>width:
+      width=self.display_area_rect.width
+    if self.display_area_rect.height>height:
+      height=self.display_area_rect.height
     rect.center=(int(width/2),int(height/2))
     self.image=pygame.Surface((width,height)).convert_alpha()
     self.rect=self.image.get_rect()
     self.image.fill(pygame.Color(0,0,0,255))
     self.image.blit(image,rect)
-    self.rect.left=int((self.game.screen_rect.width-self.rect.width)/2.0)
-    self.rect.top=int((self.game.screen_rect.height-self.rect.height)/2.0)
-    self.game.screen.blit(self.image,self.rect.topleft)
+    self.rect.left=int((self.display_area_rect.width-self.rect.width)/2.0)
+    self.rect.top=int((self.display_area_rect.height-self.rect.height)/2.0)
+    self.draw()
     

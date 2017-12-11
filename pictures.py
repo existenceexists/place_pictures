@@ -43,6 +43,13 @@ class Pictures:
     if self.do_not_interact_with_pictures:
       self.do_not_interact_with_pictures=False
       return False
+    if hasattr(event,"pos"):
+      event_dict=dict(event.dict)
+      pos=list(event_dict["pos"])
+      pos[1]=pos[1]-self.game.map.display_area_rect.top
+      event_dict["pos"]=pos
+      event=pygame.event.Event(event.type,event_dict)
+      self.game.mouse.update(event)
     if event.type==pygame.MOUSEMOTION:
       pictures_list=pygame.sprite.spritecollide(self.game.mouse,self.pictures_to_display,False)
       if pictures_list:
@@ -91,22 +98,22 @@ class Pictures:
     
   def draw(self):
     for picture in self.pictures_to_display:
-      picture.draw(self.game.screen)
+      picture.draw(self.game.map.display_area)
     
   def move_all_pictures_by(self,movement_x,movement_y):
     for picture in self.pictures_all:
        picture.move_by(movement_x,movement_y)
   
   def open_picture_file(self,path,layer,zoom):
-    pic=picture.Picture(path,layer,zoom,(self.game.screen_rect.width/2,self.game.screen_rect.height/2))
+    pic=picture.Picture(path,layer,zoom,(self.game.map.display_area_rect_top_zero.center[0],self.game.map.display_area_rect_top_zero.center[1]))
     self.pictures_all.add(pic)
     self.pictures_to_display.add(pic)
     
   def selected_pictures_go_to(self,position):
     if self.pictures_selected.sprites():
-      left=self.game.screen_rect.width
+      left=self.game.map.display_area_rect.width
       right=0
-      top=self.game.screen_rect.height
+      top=self.game.map.display_area_rect.height
       bottom=0
       for pic in self.pictures_selected.sprites():
         left=min(left,pic.rect.left)
