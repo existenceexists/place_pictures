@@ -58,7 +58,7 @@ class Gui:
     #~ création des menus
     self.menu_game = FunnyMenuSystem.MenuSystem.Menu('game', ('info','save','load','new','export as image','exit'))
     self.menu_picture = FunnyMenuSystem.MenuSystem.Menu('picture', ('open file',))
-    self.menu_select = FunnyMenuSystem.MenuSystem.Menu('select',('start multi selection','end multi selection','disable selecting','enable selecting','same file and scale','same file','layers','all on screen','all','by name'))
+    self.menu_select = FunnyMenuSystem.MenuSystem.Menu('select',('start multi selection','end multi selection','disable selecting','enable selecting','within layers','same file and scale','same file','layers','all on screen','all','by name'))
     self.menu_selection = FunnyMenuSystem.MenuSystem.Menu('selection', ('info','scale','copy','move to layer','give a name','deselect','delete'))
     self.menu_layer = FunnyMenuSystem.MenuSystem.Menu('layer', ('new layer','show list','move','join layers','display'))
     self.menu_map = FunnyMenuSystem.MenuSystem.Menu('map',('scale with pictures ','scale without pictures','open file','create'))
