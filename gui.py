@@ -65,7 +65,8 @@ class Gui:
     
     #~ création de la barre
     self.menu_bar=FunnyMenuSystem.MenuSystem.MenuBar()
-    menu_bar_rect=self.menu_bar.set((self.menu_game,self.menu_picture,self.menu_select,self.menu_selection,self.menu_layer,self.menu_map))
+    self.menu_bar.set((self.menu_game,self.menu_picture,self.menu_select,self.menu_selection,self.menu_layer,self.menu_map))
+    #menu_bar_rect=self.menu_bar.set((self.menu_game,self.menu_picture,self.menu_select,self.menu_selection,self.menu_layer,self.menu_map))
     #self.widgets_MenuSystem_to_draw_basic.append([self.game.screen.subsurface(menu_bar_rect).copy(),menu_bar_rect])
     #self.widgets_MenuSystem_to_draw.append([self.game.screen.subsurface(menu_bar_rect).copy(),menu_bar_rect])
     
