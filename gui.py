@@ -122,6 +122,58 @@ class Gui:
         return True
     return False
     
+  def is_float(self,text):
+    try:
+      float(text)
+    except:
+      return False
+    else:
+      return True
+    
+  def is_integer(self,text):
+    try:
+      int(text)
+    except:
+      return False
+    else:
+      return True
+  
+  def add_window(self,window):
+    self.container_widgets_FunnyGUI.append(window)
+    self.FunnyGUI_dialogs_stealing_focus.append(window)
+    self.force_everything_to_draw=True
+  
+  def remove_window(self,window):
+    self.container_widgets_FunnyGUI.remove(window)
+    self.FunnyGUI_dialogs_stealing_focus.remove(window)
+    self.force_everything_to_draw=True
+    
+  def display_message_window(self,text_list):
+    width=0
+    position_x=50
+    position_y=50
+    widgets=[]
+    for text in text_list:
+      widgets.append(FunnyGUI.label.Label(text=text))
+      widgets[-1].rect.topleft=(position_x,position_y)
+      width=max(width,widgets[-1].rect.width)
+      position_y=position_y+30
+    widgets.append(FunnyGUI.button.Button(text="OK",onClickCallback=self.remove_window,normalColor=(255,255,255,255),highlightedColor=(255,255,0,255)))
+    position_y=position_y+10
+    width=width+(2*50)
+    widgets[-1].rect.midtop=(width/2,position_y)
+    height=position_y+50
+    if width>self.game.screen_rect.width:
+      width=self.game.screen_rect.width
+    if height>self.game.screen_rect.height:
+      height=self.game.screen_rect.height
+    window=FunnyGUI.window.Window(width=width,height=height,backgroundColor=self.window_message_background_color)
+    window.rect.center=(self.game.screen_rect.width/2,self.game.screen_rect.height/2)
+    for widget in widgets:
+      window.add(widget)
+    widgets[-1].callbackArgs=(window,)
+    self.add_window(window)
+    
   def show_dialog_open_picture_file(self):
     path_to_picture_to_open=FunnyPathGetter.PathGetter.get()
     if not path_to_picture_to_open:
@@ -205,22 +257,6 @@ class Gui:
       return
     self.remove_window(window)
     self.game.pictures.open_picture_file(path_to_picture_to_open,layer,scale)
-    
-  def is_float(self,text):
-    try:
-      float(text)
-    except:
-      return False
-    else:
-      return True
-    
-  def is_integer(self,text):
-    try:
-      int(text)
-    except:
-      return False
-    else:
-      return True
   
   def show_dialog_create_map(self):
     width=580
@@ -332,39 +368,3 @@ class Gui:
       return
     self.remove_window(window)
     self.game.map.create_map(width,height,rgb_red,rgb_green,rgb_blue)
-    
-  def display_message_window(self,text_list):
-    width=0
-    position_x=50
-    position_y=50
-    widgets=[]
-    for text in text_list:
-      widgets.append(FunnyGUI.label.Label(text=text))
-      widgets[-1].rect.topleft=(position_x,position_y)
-      width=max(width,widgets[-1].rect.width)
-      position_y=position_y+30
-    widgets.append(FunnyGUI.button.Button(text="OK",onClickCallback=self.remove_window,normalColor=(255,255,255,255),highlightedColor=(255,255,0,255)))
-    position_y=position_y+10
-    width=width+(2*50)
-    widgets[-1].rect.midtop=(width/2,position_y)
-    height=position_y+50
-    if width>self.game.screen_rect.width:
-      width=self.game.screen_rect.width
-    if height>self.game.screen_rect.height:
-      height=self.game.screen_rect.height
-    window=FunnyGUI.window.Window(width=width,height=height,backgroundColor=self.window_message_background_color)
-    window.rect.center=(self.game.screen_rect.width/2,self.game.screen_rect.height/2)
-    for widget in widgets:
-      window.add(widget)
-    widgets[-1].callbackArgs=(window,)
-    self.add_window(window)
-  
-  def add_window(self,window):
-    self.container_widgets_FunnyGUI.append(window)
-    self.FunnyGUI_dialogs_stealing_focus.append(window)
-    self.force_everything_to_draw=True
-  
-  def remove_window(self,window):
-    self.container_widgets_FunnyGUI.remove(window)
-    self.FunnyGUI_dialogs_stealing_focus.remove(window)
-    self.force_everything_to_draw=True
