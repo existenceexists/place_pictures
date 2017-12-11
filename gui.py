@@ -35,7 +35,7 @@ class Gui:
     
     self.game=game
     self.container_widgets_FunnyGUI=[]
-    self.widgets_MenuSystem_to_draw_basic=[]
+    #self.widgets_MenuSystem_to_draw_basic=[]
     self.widgets_MenuSystem_to_draw=[]
     self.FunnyGUI_dialogs_stealing_focus=[]
     self.window_background_color=(0,0,0,200)
@@ -66,8 +66,8 @@ class Gui:
     #~ création de la barre
     self.menu_bar=FunnyMenuSystem.MenuSystem.MenuBar()
     menu_bar_rect=self.menu_bar.set((self.menu_game,self.menu_picture,self.menu_select,self.menu_selection,self.menu_layer,self.menu_map))
-    self.widgets_MenuSystem_to_draw_basic.append([self.game.screen.subsurface(menu_bar_rect).copy(),menu_bar_rect])
-    self.widgets_MenuSystem_to_draw=list(self.widgets_MenuSystem_to_draw_basic)
+    #self.widgets_MenuSystem_to_draw_basic.append([self.game.screen.subsurface(menu_bar_rect).copy(),menu_bar_rect])
+    #self.widgets_MenuSystem_to_draw.append([self.game.screen.subsurface(menu_bar_rect).copy(),menu_bar_rect])
     
     #self.label_selected_pictures_count=label.Label('pictures:  0',(200,200,200,255),(80,80,80,80))
     #self.label_selected_pictures_count.set_topright_position((990,60))
