@@ -56,11 +56,11 @@ class Gui:
     FunnyMenuSystem.MenuSystem.BORDER_HL = pygame.Color(200,200,200,180)
     
     #~ création des menus
-    self.menu_game = FunnyMenuSystem.MenuSystem.Menu('game', ('info','save','load','new','export as image','exit'))
+    self.menu_game = FunnyMenuSystem.MenuSystem.Menu('game', ('info','turn on info','turn off info','save','load','new','export as image','exit'))
     self.menu_picture = FunnyMenuSystem.MenuSystem.Menu('picture', ('open file',))
     self.menu_select = FunnyMenuSystem.MenuSystem.Menu('select',('start multi selection','end multi selection','disable selecting','enable selecting','within layers','same file and scale','same file','layers','all on screen','all','by name'))
     self.menu_selection = FunnyMenuSystem.MenuSystem.Menu('selection', ('info','scale','copy','move to layer','give a name','deselect','delete'))
-    self.menu_layer = FunnyMenuSystem.MenuSystem.Menu('layer', ('new layer','show list','move','join layers','display'))
+    self.menu_layer = FunnyMenuSystem.MenuSystem.Menu('layers', ('info','new','move','join','display'))
     self.menu_map = FunnyMenuSystem.MenuSystem.Menu('map',('scale with pictures ','scale without pictures','open file','create'))
     
     #~ création de la barre
@@ -94,7 +94,7 @@ class Gui:
       for rect in rect_list:
         self.widgets_MenuSystem_to_draw.append([self.game.screen.subsurface(rect).copy(),rect])
       if self.menu_bar.choice:
-        if self.menu_bar.choice_index==(0,5):
+        if self.menu_bar.choice_index==(0,7):
           self.game.exit()
         elif self.menu_bar.choice_index==(1,0):
           self.show_dialog_open_picture_file()
