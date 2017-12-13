@@ -122,6 +122,8 @@ class Gui:
       widget.draw(self.game.screen)
   
   def is_mouse_pointer_over_gui_widget(self):
+    if self.menu_bar.rect.collidepoint(self.game.mouse.rect.center):
+      return True
     for surface_and_rect in self.widgets_MenuSystem_to_draw:
       if surface_and_rect[1].collidepoint(self.game.mouse.rect.center):
         return True
