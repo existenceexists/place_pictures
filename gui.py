@@ -40,6 +40,9 @@ class Gui:
     self.FunnyGUI_dialogs_stealing_focus=[]
     self.window_background_color=(0,0,0,200)
     self.window_message_background_color=(100,0,0,200)
+    self.font_size_buttons_ok_cancel=20
+    self.text_line_height=30
+    self.text_paragraphs_distance_height=50
     self.create_gui()
     self.force_everything_to_draw=False
 
@@ -98,6 +101,8 @@ class Gui:
           self.game.exit()
         elif self.menu_bar.choice_index==(1,0):
           self.show_dialog_open_picture_file()
+        elif self.menu_bar.choice_index==(3,1):
+          self.show_dialog_scale_selection()
         elif self.menu_bar.choice_index==(5,2):
           self.show_dialog_open_map_file()
         elif self.menu_bar.choice_index==(5,3):
@@ -160,12 +165,12 @@ class Gui:
       widgets.append(FunnyGUI.label.Label(text=text))
       widgets[-1].rect.topleft=(position_x,position_y)
       width=max(width,widgets[-1].rect.width)
-      position_y=position_y+30
+      position_y=position_y+self.text_line_height
     widgets.append(FunnyGUI.button.Button(text="OK",onClickCallback=self.remove_window,normalColor=(255,255,255,255),highlightedColor=(255,255,0,255)))
     position_y=position_y+10
     width=width+(2*50)
     widgets[-1].rect.midtop=(width/2,position_y)
-    height=position_y+50
+    height=position_y+self.text_paragraphs_distance_height
     if width>self.game.map.display_area_rect.width:
       width=self.game.map.display_area_rect.width
     if height>self.game.map.display_area_rect.height:
@@ -190,44 +195,44 @@ class Gui:
     widgets=[]
     widgets.append(FunnyGUI.label.Label(text="""Open and show picture file."""))
     widgets[-1].rect.topleft=(position_x,position_y)
-    position_y=position_y+50
+    position_y=position_y+self.text_paragraphs_distance_height
     widgets.append(FunnyGUI.label.Label(text="""Enter scale percent."""))
     widgets[-1].rect.topleft=(position_x,position_y)
-    position_y=position_y+30
+    position_y=position_y+self.text_line_height
     widgets.append(FunnyGUI.label.Label(text="""The size of the new picture will be scaled"""))
     widgets[-1].rect.topleft=(position_x,position_y)
-    position_y=position_y+30
+    position_y=position_y+self.text_line_height
     widgets.append(FunnyGUI.label.Label(text="""to the given percent size of the original picture."""))
     widgets[-1].rect.topleft=(position_x,position_y)
-    position_y=position_y+30
+    position_y=position_y+self.text_line_height
     widgets.append(FunnyGUI.label.Label(text="""The number can be an integer or floating point number between 0 and infinity."""))
     widgets[-1].rect.topleft=(position_x,position_y)
-    position_y=position_y+30
+    position_y=position_y+self.text_line_height
     input_box_scale=FunnyGUI.inputbox.InputBox()
     input_box_scale.SetText("100")
     widgets.append(input_box_scale)
     widgets[-1].rect.topleft=(position_x,position_y)
-    position_y=position_y+50
+    position_y=position_y+self.text_paragraphs_distance_height
     widgets.append(FunnyGUI.label.Label(text="""Enter layer number."""))
     widgets[-1].rect.topleft=(position_x,position_y)
-    position_y=position_y+30
+    position_y=position_y+self.text_line_height
     widgets.append(FunnyGUI.label.Label(text="""The new picture will be moved into the layer."""))
     widgets[-1].rect.topleft=(position_x,position_y)
-    position_y=position_y+30
+    position_y=position_y+self.text_line_height
     top_layer=self.game.pictures.get_number_of_layers()
     if top_layer==0:
       top_layer=1
     widgets.append(FunnyGUI.label.Label(text="""The number can be an integer number between 1 and """+str(top_layer)+""" ."""))
     widgets[-1].rect.topleft=(position_x,position_y)
-    position_y=position_y+30
+    position_y=position_y+self.text_line_height
     input_box_layer=FunnyGUI.inputbox.InputBox()
     input_box_layer.SetText("1")
     widgets.append(input_box_layer)
     widgets[-1].rect.topleft=(position_x,position_y)
-    position_y=position_y+50
-    widgets.append(FunnyGUI.button.Button(text="OK",onClickCallback=self.confirm_dialog_open_picture_file,fontSize=20))
+    position_y=position_y+self.text_paragraphs_distance_height
+    widgets.append(FunnyGUI.button.Button(text="OK",onClickCallback=self.confirm_dialog_open_picture_file,fontSize=self.font_size_buttons_ok_cancel))
     widgets[-1].rect.topright=((width/2)-20,position_y)
-    widgets.append(FunnyGUI.button.Button(text="Cancel",onClickCallback=self.remove_window,fontSize=20))
+    widgets.append(FunnyGUI.button.Button(text="Cancel",onClickCallback=self.remove_window,fontSize=self.font_size_buttons_ok_cancel))
     widgets[-1].rect.topleft=((width/2)+20,position_y)
     height=position_y+70
     window=FunnyGUI.window.Window(width=width,height=height,backgroundColor=self.window_background_color)
@@ -274,27 +279,27 @@ class Gui:
     widgets=[]
     widgets.append(FunnyGUI.label.Label(text="""Open and show background picture file."""))
     widgets[-1].rect.topleft=(position_x,position_y)
-    position_y=position_y+50
+    position_y=position_y+self.text_paragraphs_distance_height
     widgets.append(FunnyGUI.label.Label(text="""Enter scale percent."""))
     widgets[-1].rect.topleft=(position_x,position_y)
-    position_y=position_y+30
+    position_y=position_y+self.text_line_height
     widgets.append(FunnyGUI.label.Label(text="""The size of the new picture will be scaled"""))
     widgets[-1].rect.topleft=(position_x,position_y)
-    position_y=position_y+30
+    position_y=position_y+self.text_line_height
     widgets.append(FunnyGUI.label.Label(text="""to the given percent size of the original picture."""))
     widgets[-1].rect.topleft=(position_x,position_y)
-    position_y=position_y+30
+    position_y=position_y+self.text_line_height
     widgets.append(FunnyGUI.label.Label(text="""The number can be an integer or floating point number between 0 and infinity."""))
     widgets[-1].rect.topleft=(position_x,position_y)
-    position_y=position_y+30
+    position_y=position_y+self.text_line_height
     input_box_scale=FunnyGUI.inputbox.InputBox()
     input_box_scale.SetText("100")
     widgets.append(input_box_scale)
     widgets[-1].rect.topleft=(position_x,position_y)
-    position_y=position_y+50
-    widgets.append(FunnyGUI.button.Button(text="OK",onClickCallback=self.confirm_dialog_open_map_file,fontSize=20))
+    position_y=position_y+self.text_paragraphs_distance_height
+    widgets.append(FunnyGUI.button.Button(text="OK",onClickCallback=self.confirm_dialog_open_map_file,fontSize=self.font_size_buttons_ok_cancel))
     widgets[-1].rect.topright=((width/2)-20,position_y)
-    widgets.append(FunnyGUI.button.Button(text="Cancel",onClickCallback=self.remove_window,fontSize=20))
+    widgets.append(FunnyGUI.button.Button(text="Cancel",onClickCallback=self.remove_window,fontSize=self.font_size_buttons_ok_cancel))
     widgets[-1].rect.topleft=((width/2)+20,position_y)
     height=position_y+70
     window=FunnyGUI.window.Window(width=width,height=height,backgroundColor=self.window_background_color)
@@ -324,53 +329,53 @@ class Gui:
     widgets=[]
     widgets.append(FunnyGUI.label.Label(text="""Create background image filled with solid color."""))
     widgets[-1].rect.topleft=(position_x,position_y)
-    position_y=position_y+50
+    position_y=position_y+self.text_paragraphs_distance_height
     widgets.append(FunnyGUI.label.Label(text="""Enter size of the background image:"""))
     widgets[-1].rect.topleft=(position_x,position_y)
-    position_y=position_y+30
+    position_y=position_y+self.text_line_height
     widgets.append(FunnyGUI.label.Label(text="""Size of the current background image is: width: """+str(self.game.map.rect.width)+""", height: """+str(self.game.map.rect.height)))
     widgets[-1].rect.topleft=(position_x,position_y)
-    position_y=position_y+30
+    position_y=position_y+self.text_line_height
     widgets.append(FunnyGUI.label.Label(text="""width:"""))
     widgets[-1].rect.topleft=(position_x,position_y)
     input_box_width=FunnyGUI.inputbox.InputBox()
     widgets.append(input_box_width)
     widgets[-1].rect.topleft=(position_x+60,position_y)
-    position_y=position_y+30
+    position_y=position_y+self.text_line_height
     widgets.append(FunnyGUI.label.Label(text="""height:"""))
     widgets[-1].rect.topleft=(position_x,position_y)
     input_box_height=FunnyGUI.inputbox.InputBox()
     widgets.append(input_box_height)
     widgets[-1].rect.topleft=(position_x+60,position_y)
-    position_y=position_y+50
+    position_y=position_y+self.text_paragraphs_distance_height
     widgets.append(FunnyGUI.label.Label(text="""Enter RGB color value the image will be filled with:"""))
     widgets[-1].rect.topleft=(position_x,position_y)
-    position_y=position_y+30
+    position_y=position_y+self.text_line_height
     widgets.append(FunnyGUI.label.Label(text="""Values can be integer numbers between 0 and 255."""))
     widgets[-1].rect.topleft=(position_x,position_y)
-    position_y=position_y+30
+    position_y=position_y+self.text_line_height
     widgets.append(FunnyGUI.label.Label(text="""Red:"""))
     widgets[-1].rect.topleft=(position_x,position_y)
     input_box_rgb_red=FunnyGUI.inputbox.InputBox()
     widgets.append(input_box_rgb_red)
     widgets[-1].rect.topleft=(position_x+60,position_y)
-    position_y=position_y+30
+    position_y=position_y+self.text_line_height
     widgets.append(FunnyGUI.label.Label(text="""Green:"""))
     widgets[-1].rect.topleft=(position_x,position_y)
     input_box_rgb_green=FunnyGUI.inputbox.InputBox()
     widgets.append(input_box_rgb_green)
     widgets[-1].rect.topleft=(position_x+60,position_y)
-    position_y=position_y+30
+    position_y=position_y+self.text_line_height
     widgets.append(FunnyGUI.label.Label(text="""Blue:"""))
     widgets[-1].rect.topleft=(position_x,position_y)
     input_box_rgb_blue=FunnyGUI.inputbox.InputBox()
     widgets.append(input_box_rgb_blue)
     widgets[-1].rect.topleft=(position_x+60,position_y)
-    position_y=position_y+30
-    position_y=position_y+50
-    widgets.append(FunnyGUI.button.Button(text="OK",onClickCallback=self.confirm_dialog_create_map,fontSize=20))
+    position_y=position_y+self.text_line_height
+    position_y=position_y+self.text_paragraphs_distance_height
+    widgets.append(FunnyGUI.button.Button(text="OK",onClickCallback=self.confirm_dialog_create_map,fontSize=self.font_size_buttons_ok_cancel))
     widgets[-1].rect.topright=((width/2)-20,position_y)
-    widgets.append(FunnyGUI.button.Button(text="Cancel",onClickCallback=self.remove_window,fontSize=20))
+    widgets.append(FunnyGUI.button.Button(text="Cancel",onClickCallback=self.remove_window,fontSize=self.font_size_buttons_ok_cancel))
     widgets[-1].rect.topleft=((width/2)+20,position_y)
     height=position_y+70
     window=FunnyGUI.window.Window(width=width,height=height,backgroundColor=self.window_background_color)
@@ -427,3 +432,53 @@ class Gui:
       return
     self.remove_window(window)
     self.game.map.create_map(width,height,rgb_red,rgb_green,rgb_blue)
+    
+  def show_dialog_scale_selection(self):
+    width=580
+    position_x=50
+    position_y=50
+    widgets=[]
+    widgets.append(FunnyGUI.label.Label(text="""Scale picture"""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y=position_y+self.text_paragraphs_distance_height
+    widgets.append(FunnyGUI.label.Label(text="""Enter scale percent."""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y=position_y+self.text_line_height
+    widgets.append(FunnyGUI.label.Label(text="""The size of picture files of selected pictures will be scaled"""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y=position_y+self.text_line_height
+    widgets.append(FunnyGUI.label.Label(text="""to the given percent size of the original picture files."""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y=position_y+self.text_line_height
+    widgets.append(FunnyGUI.label.Label(text="""The number can be an integer or floating point number between 0 and infinity."""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y=position_y+self.text_line_height
+    input_box_scale=FunnyGUI.inputbox.InputBox()
+    input_box_scale.SetText("100")
+    widgets.append(input_box_scale)
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y=position_y+self.text_paragraphs_distance_height
+    widgets.append(FunnyGUI.button.Button(text="OK",onClickCallback=self.confirm_dialog_scale_selection,fontSize=self.font_size_buttons_ok_cancel))
+    widgets[-1].rect.topright=((width/2)-20,position_y)
+    widgets.append(FunnyGUI.button.Button(text="Cancel",onClickCallback=self.remove_window,fontSize=self.font_size_buttons_ok_cancel))
+    widgets[-1].rect.topleft=((width/2)+20,position_y)
+    height=position_y+70
+    window=FunnyGUI.window.Window(width=width,height=height,backgroundColor=self.window_background_color)
+    window.rect.center=(self.game.map.display_area_rect.center[0],self.game.map.display_area_rect.center[1])
+    for widget in widgets:
+      window.add(widget)
+    widgets[-1].callbackArgs=(window,)
+    widgets[-2].callbackArgs=(window,input_box_scale)
+    self.add_window(window)
+    
+  def confirm_dialog_scale_selection(self,window,input_box_scale):
+    scale=input_box_scale.GetText()
+    try:
+      assert(self.is_float(scale))
+      scale=float(scale)
+      assert(scale>=0)
+    except AssertionError:
+      self.display_message_window(["You have not filled scale number field correctly."])
+      return
+    self.remove_window(window)
+    self.game.pictures.scale_selected_pictures(scale)

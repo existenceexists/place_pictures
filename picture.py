@@ -31,11 +31,32 @@ class Picture(pygame.sprite.Sprite):
     pygame.sprite.Sprite.__init__(self)
     self.path=path
     self.set_layer(layer)
-    image_unscaled=pygame.image.load(path).convert_alpha()
+    self.scale=float(scale)/100.0# convert from percent
+    self.is_highlighted=False
+    self.is_selected=False
+    self.create_images()
+    self.go_to(position)
+    
+  def update(self,event):
+    pass
+  
+  def draw(self,surface):
+    surface.blit(self.image,self.rect)
+  
+  def set_layer(self,layer):
+    self._layer=layer
+  
+  def go_to(self,position):
+    self.rect.center=position
+  
+  def move_by(self,movement_x,movement_y):
+    self.rect.center=(self.rect.center[0]+movement_x,self.rect.center[1]+movement_y)
+    
+  def create_images(self):
+    image_unscaled=pygame.image.load(self.path).convert_alpha()
     image_unscaled_rect=image_unscaled.get_rect()
-    scale=float(scale)/100.0# convert from percent
-    width=int(round(image_unscaled_rect.width*scale))
-    height=int(round(image_unscaled_rect.height*scale))
+    width=int(round(image_unscaled_rect.width*self.scale))
+    height=int(round(image_unscaled_rect.height*self.scale))
     self.image_normal=pygame.transform.scale(image_unscaled,(width,height))
     self.rect_normal=self.image_normal.get_rect()
     self.image_highlighted=pygame.Surface((self.rect_normal.width+2,self.rect_normal.height+2)).convert_alpha()
@@ -56,25 +77,16 @@ class Picture(pygame.sprite.Sprite):
     self.image_highlighted_and_selected.blit(self.image_normal,(2,2))
     self.image=self.image_normal
     self.rect=self.rect_normal
-    self.is_highlighted=False
-    self.is_selected=False
-    self.go_to(position)
-    
-  def update(self,event):
-    pass
+    if self.is_highlighted and self.is_selected:
+      self.image=self.image_highlighted_and_selected
+      self.rect=self.rect_highlighted_and_selected
+    elif self.is_highlighted:
+      self.image=self.image_highlighted
+      self.rect=self.rect_highlighted
+    elif self.is_selected:
+      self.image=self.image_selected
+      self.rect=self.rect_selected
   
-  def draw(self,surface):
-    surface.blit(self.image,self.rect)
-  
-  def set_layer(self,layer):
-    self._layer=layer
-  
-  def go_to(self,position):
-    self.rect.center=position
-  
-  def move_by(self,movement_x,movement_y):
-    self.rect.center=(self.rect.center[0]+movement_x,self.rect.center[1]+movement_y)
-    
   def select(self):
     self.is_selected=True
     pos=self.rect.center
@@ -114,3 +126,9 @@ class Picture(pygame.sprite.Sprite):
       self.image=self.image_selected
       self.rect=self.rect_selected
     self.rect.center=pos
+  
+  def scale_images(self,scale):
+    self.scale=float(scale)/100.0# convert from percent
+    position=self.rect.center
+    self.create_images()
+    self.rect.center=position

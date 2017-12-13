@@ -126,3 +126,7 @@ class Pictures:
     
   def get_number_of_layers(self):
     return len(self.pictures_all.layers())
+  
+  def scale_selected_pictures(self,scale):
+    for picture in self.pictures_selected.sprites():
+      picture.scale_images(scale)
