@@ -201,13 +201,13 @@ class Gui:
     widgets.append(FunnyGUI.label.Label(text="""Enter scale percent."""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+self.text_line_height
-    widgets.append(FunnyGUI.label.Label(text="""The size of the new picture will be scaled"""))
+    widgets.append(FunnyGUI.label.Label(text="""Picture will be scaled"""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+self.text_line_height
-    widgets.append(FunnyGUI.label.Label(text="""to the given percent size of the original picture."""))
+    widgets.append(FunnyGUI.label.Label(text="""to the given percent size of the original picture file."""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+self.text_line_height
-    widgets.append(FunnyGUI.label.Label(text="""The number can be an integer or floating point number between 0 and infinity."""))
+    widgets.append(FunnyGUI.label.Label(text="""The number can be an integer or decimal number between 0 and infinity."""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+self.text_line_height
     input_box_scale=FunnyGUI.inputbox.InputBox()
@@ -218,13 +218,16 @@ class Gui:
     widgets.append(FunnyGUI.label.Label(text="""Enter layer number."""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+self.text_line_height
-    widgets.append(FunnyGUI.label.Label(text="""The new picture will be moved into the layer."""))
+    widgets.append(FunnyGUI.label.Label(text="""Picture will be moved into layer with the given number."""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+self.text_line_height
     top_layer=self.game.pictures.get_number_of_layers()
     if top_layer==0:
       top_layer=1
-    widgets.append(FunnyGUI.label.Label(text="""The number can be an integer number between 1 and """+str(top_layer)+""" ."""))
+    if top_layer==1:
+      widgets.append(FunnyGUI.label.Label(text="""Currently the number can be only number 1 ."""))
+    else:
+      widgets.append(FunnyGUI.label.Label(text="""The number can be an integer number between 1 and {0} .""".format(str(top_layer))))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+self.text_line_height
     input_box_layer=FunnyGUI.inputbox.InputBox()
@@ -285,13 +288,13 @@ class Gui:
     widgets.append(FunnyGUI.label.Label(text="""Enter scale percent."""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+self.text_line_height
-    widgets.append(FunnyGUI.label.Label(text="""The size of the new picture will be scaled"""))
+    widgets.append(FunnyGUI.label.Label(text="""Picture will be scaled"""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+self.text_line_height
-    widgets.append(FunnyGUI.label.Label(text="""to the given percent size of the original picture."""))
+    widgets.append(FunnyGUI.label.Label(text="""to the given percent size of the original picture file."""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+self.text_line_height
-    widgets.append(FunnyGUI.label.Label(text="""The number can be an integer or floating point number between 0 and infinity."""))
+    widgets.append(FunnyGUI.label.Label(text="""The number can be an integer or decimal number between 0 and infinity."""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+self.text_line_height
     input_box_scale=FunnyGUI.inputbox.InputBox()
@@ -335,7 +338,7 @@ class Gui:
     widgets.append(FunnyGUI.label.Label(text="""Enter size of the background image:"""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+self.text_line_height
-    widgets.append(FunnyGUI.label.Label(text="""Size of the current background image is: width: """+str(self.game.map.rect.width)+""", height: """+str(self.game.map.rect.height)))
+    widgets.append(FunnyGUI.label.Label(text="""Size of the current background image is: width: {0} , height: {1}""".format(str(self.game.map.rect.width),str(self.game.map.rect.height))))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+self.text_line_height
     widgets.append(FunnyGUI.label.Label(text="""width:"""))
@@ -436,29 +439,30 @@ class Gui:
     self.game.map.create_map(width,height,rgb_red,rgb_green,rgb_blue)
     
   def show_dialog_scale_selection(self):
-    if len(self.game.pictures.pictures_selected.sprites())==0:
+    number_of_selected_pictures=self.game.pictures.get_number_of_selected_pictures()
+    if number_of_selected_pictures==0:
       self.display_message_window(["No pictures selected."])
       return
     width=580
     position_x=50
     position_y=50
     widgets=[]
-    widgets.append(FunnyGUI.label.Label(text="""Scale picture"""))
+    widgets.append(FunnyGUI.label.Label(text="""Scale pictures"""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+self.text_paragraphs_distance_height
-    widgets.append(FunnyGUI.label.Label(text="""The number of selected pictures is: {0}""".format(str(len(self.game.pictures.pictures_selected.sprites())))))
+    widgets.append(FunnyGUI.label.Label(text="""The number of selected pictures is: {0}""".format(str(number_of_selected_pictures))))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+self.text_paragraphs_distance_height
     widgets.append(FunnyGUI.label.Label(text="""Enter scale percent."""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+self.text_line_height
-    widgets.append(FunnyGUI.label.Label(text="""The size of picture files of selected pictures will be scaled"""))
+    widgets.append(FunnyGUI.label.Label(text="""Selected pictures will be scaled"""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+self.text_line_height
     widgets.append(FunnyGUI.label.Label(text="""to the given percent size of the original picture files."""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+self.text_line_height
-    widgets.append(FunnyGUI.label.Label(text="""The number can be an integer or floating point number between 0 and infinity."""))
+    widgets.append(FunnyGUI.label.Label(text="""The number can be an integer or decimal number between 0 and infinity."""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+self.text_line_height
     input_box_scale=FunnyGUI.inputbox.InputBox()
