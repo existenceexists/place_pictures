@@ -436,11 +436,17 @@ class Gui:
     self.game.map.create_map(width,height,rgb_red,rgb_green,rgb_blue)
     
   def show_dialog_scale_selection(self):
+    if len(self.game.pictures.pictures_selected.sprites())==0:
+      self.display_message_window(["No pictures selected."])
+      return
     width=580
     position_x=50
     position_y=50
     widgets=[]
     widgets.append(FunnyGUI.label.Label(text="""Scale picture"""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y=position_y+self.text_paragraphs_distance_height
+    widgets.append(FunnyGUI.label.Label(text="""The number of selected pictures is: {0}""".format(str(len(self.game.pictures.pictures_selected.sprites())))))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y=position_y+self.text_paragraphs_distance_height
     widgets.append(FunnyGUI.label.Label(text="""Enter scale percent."""))
