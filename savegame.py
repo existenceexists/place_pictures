@@ -58,7 +58,10 @@ class Savegame():
         selected="n"
         if picture.is_selected:
           selected="s"
-        line="%picture;{0};{1};{2};{3};{4};{5};\n".format(picture.path,picture.get_layer(),picture.scale,picture.rect.center[0]+self.game.map.rect.left,picture.rect.center[1]+self.game.map.rect.top,selected)
+        displayed="n"
+        if picture in self.game.pictures.pictures_to_display:
+          displayed="d"
+        line="%picture;{0};{1};{2};{3};{4};{5};{6};\n".format(picture.path,picture.get_layer(),picture.scale,picture.rect.center[0]+self.game.map.rect.left,picture.rect.center[1]+self.game.map.rect.top,selected,displayed)
         f.write(line)
     
   def load(self,path):
@@ -92,7 +95,10 @@ class Savegame():
             selected=False
             if line[6]=="s":
               selected=True
-            self.game.pictures.open_picture_file(line[1],int(line[2]),float(line[3]),int(line[4])-self.game.map.rect.left,int(line[5])-self.game.map.rect.top,selected)
+            displayed=False
+            if line[7]=="d":
+              displayed=True
+            self.game.pictures.open_picture_file(line[1],int(line[2]),float(line[3]),int(line[4])-self.game.map.rect.left,int(line[5])-self.game.map.rect.top,selected,displayed)
           else:
             self.game.gui.display_message_window(["An error occured when loading game.","File",path,"line {0}".format(lines_count)])
             return

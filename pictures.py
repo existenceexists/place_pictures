@@ -104,13 +104,14 @@ class Pictures:
     for picture in self.pictures_all:
        picture.move_by(movement_x,movement_y)
   
-  def open_picture_file(self,path,layer,scale,center_x,center_y,selected=False):
+  def open_picture_file(self,path,layer,scale,center_x,center_y,select=False,display=True):
     pic=picture.Picture(path,layer,scale,center_x,center_y)
     self.pictures_all.add(pic)
-    self.pictures_to_display.add(pic)
-    if selected:
+    if select:
       pic.select()
       self.pictures_selected.add(pic)
+    if display:
+      self.pictures_to_display.add(pic)
     
   def selected_pictures_go_to(self,position):
     if self.pictures_selected.sprites():
