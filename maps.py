@@ -38,6 +38,11 @@ class Map:
     self.display_area=self.game.screen.subsurface(self.display_area_rect)
     self.display_area_rect_top_zero=self.display_area.get_rect().copy()
     self.display_area_rect_top_zero.top=0
+    self.path=None
+    self.background_color=None
+    self.is_background_filled_with_color=False
+    self.is_background_from_file=False
+    self.scale=1.0
     
   def update(self,event):
     return_value=False
@@ -87,19 +92,25 @@ class Map:
       self.moving=True
     
   def open_image(self,path,scale):
-    self.path=path
     image_unscaled=pygame.image.load(path).convert_alpha()
     image_unscaled_rect=image_unscaled.get_rect()
-    scale=float(scale)/100.0# convert from percent
-    width=int(round(image_unscaled_rect.width*scale))
-    height=int(round(image_unscaled_rect.height*scale))
+    self.scale=float(scale)
+    width=int(round(image_unscaled_rect.width*self.scale))
+    height=int(round(image_unscaled_rect.height*self.scale))
     image=pygame.transform.scale(image_unscaled,(width,height))
     self.set_background_image(image)
+    self.path=path
+    self.is_background_filled_with_color=False
+    self.is_background_from_file=True
   
   def create_map(self,width,height,rgb_red,rgb_green,rgb_blue):
     image=pygame.Surface((width,height)).convert_alpha()
     image.fill(pygame.Color(rgb_red,rgb_green,rgb_blue))
     self.set_background_image(image)
+    self.background_color=(rgb_red,rgb_green,rgb_blue)
+    self.scale=1.0
+    self.is_background_filled_with_color=True
+    self.is_background_from_file=False
   
   def set_background_image(self,image):
     rect=image.get_rect()

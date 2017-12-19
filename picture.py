@@ -27,15 +27,15 @@ import pygame
 
 class Picture(pygame.sprite.Sprite):
   
-  def __init__(self,path,layer,scale,position):
+  def __init__(self,path,layer,scale,center_x,center_y):
     pygame.sprite.Sprite.__init__(self)
     self.path=path
     self.set_layer(layer)
-    self.scale=float(scale)/100.0# convert from percent
+    self.scale=float(scale)
     self.is_highlighted=False
     self.is_selected=False
     self.create_images()
-    self.go_to(position)
+    self.rect.center=(center_x,center_y)
     
   def update(self,event):
     pass
@@ -46,8 +46,8 @@ class Picture(pygame.sprite.Sprite):
   def set_layer(self,layer):
     self._layer=layer
   
-  def go_to(self,position):
-    self.rect.center=position
+  def get_layer(self):
+    return self._layer
   
   def move_by(self,movement_x,movement_y):
     self.rect.center=(self.rect.center[0]+movement_x,self.rect.center[1]+movement_y)

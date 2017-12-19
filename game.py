@@ -29,6 +29,7 @@ import gui
 import maps
 import mouse
 import pictures
+import savegame
 
 
 class Game:
@@ -44,6 +45,7 @@ class Game:
     self.gui = gui.Gui(self)
     self.pictures=pictures.Pictures(self)
     self.mouse=mouse.Mouse()
+    self.savegame=savegame.Savegame(self)
     pygame.display.flip()
     
   def parse_command_line_arguments(self):
