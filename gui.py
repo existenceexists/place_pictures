@@ -62,14 +62,14 @@ class Gui:
     #~ création des menus
     self.menu_game = FunnyMenuSystem.MenuSystem.Menu('game', ('info','turn on info','turn off info','save','load','new','export as image','exit'))
     self.menu_picture = FunnyMenuSystem.MenuSystem.Menu('picture', ('open file',))
+    self.menu_map = FunnyMenuSystem.MenuSystem.Menu('map',('open file','create','scale with pictures ','scale without pictures'))
     self.menu_select = FunnyMenuSystem.MenuSystem.Menu('select',('start multi selection','end multi selection','disable selecting','enable selecting','within layers','same file and scale','same file','layers','all on screen','all','by name'))
     self.menu_selection = FunnyMenuSystem.MenuSystem.Menu('selection', ('info','scale','copy','move to layer','give a name','deselect','delete'))
     self.menu_layer = FunnyMenuSystem.MenuSystem.Menu('layers', ('info','new','move','join','display'))
-    self.menu_map = FunnyMenuSystem.MenuSystem.Menu('map',('scale with pictures ','scale without pictures','open file','create'))
     
     #~ création de la barre
     self.menu_bar=FunnyMenuSystem.MenuSystem.MenuBar()
-    self.menu_bar.set((self.menu_game,self.menu_picture,self.menu_select,self.menu_selection,self.menu_layer,self.menu_map))
+    self.menu_bar.set((self.menu_game,self.menu_picture,self.menu_map,self.menu_select,self.menu_selection,self.menu_layer))
     #menu_bar_rect=self.menu_bar.set((self.menu_game,self.menu_picture,self.menu_select,self.menu_selection,self.menu_layer,self.menu_map))
     #self.widgets_MenuSystem_to_draw_basic.append([self.game.screen.subsurface(menu_bar_rect).copy(),menu_bar_rect])
     #self.widgets_MenuSystem_to_draw.append([self.game.screen.subsurface(menu_bar_rect).copy(),menu_bar_rect])
@@ -106,11 +106,11 @@ class Gui:
           self.show_dialog_load_game()
         elif self.menu_bar.choice_index==(1,0):
           self.show_dialog_open_picture_file()
-        elif self.menu_bar.choice_index==(3,1):
+        elif self.menu_bar.choice_index==(4,1):
           self.show_dialog_scale_selection()
-        elif self.menu_bar.choice_index==(5,2):
+        elif self.menu_bar.choice_index==(2,0):
           self.show_dialog_open_map_file()
-        elif self.menu_bar.choice_index==(5,3):
+        elif self.menu_bar.choice_index==(2,1):
           self.show_dialog_create_map()
     for widget in self.container_widgets_FunnyGUI:
       if widget.update(event):
