@@ -43,6 +43,8 @@ class Map:
     self.is_background_filled_with_color=False
     self.is_background_from_file=False
     self.scale=1.0
+    self.image=None
+    self.rect=None
     
   def update(self,event):
     return_value=False
@@ -116,16 +118,27 @@ class Map:
     rect=image.get_rect()
     width=rect.width
     height=rect.height
+    if not self.rect is None:
+      # If map image already existed, 
+      # position screen relative to map image 
+      # similarly or same as the old relative position to old map image.
+      position_x=int((float(self.rect.left)*width)/self.rect.width)
+      position_y=int((float(self.rect.top)*height)/self.rect.height)
+    else:
+      # Position the screen to the center of map image.
+      position_x=int((self.display_area_rect.width-width)/2.0)
+      position_y=int((self.display_area_rect.height-height)/2.0)
     if self.display_area_rect.width>width:
       width=self.display_area_rect.width
+      position_x=0
     if self.display_area_rect.height>height:
       height=self.display_area_rect.height
+      position_y=0
     rect.center=(int(width/2),int(height/2))
     self.image=pygame.Surface((width,height)).convert_alpha()
     self.rect=self.image.get_rect()
     self.image.fill(pygame.Color(0,0,0,255))
     self.image.blit(image,rect)
-    self.rect.left=int((self.display_area_rect.width-self.rect.width)/2.0)
-    self.rect.top=int((self.display_area_rect.height-self.rect.height)/2.0)
+    self.rect.left=position_x
+    self.rect.top=position_y
     self.draw()
-    
