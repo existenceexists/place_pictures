@@ -39,7 +39,7 @@ class Game:
     self.screen=pygame.display.set_mode((args.width,args.height))
     self.screen_rect=self.screen.get_rect()
     pygame.display.set_caption("Place Pictures")
-    pygame.key.set_repeat(500,500)
+    pygame.key.set_repeat(100,100)
     self.map=maps.Map(self)
     self.map.create_map(2000,2000,0,0,0)
     self.gui = gui.Gui(self)
