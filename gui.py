@@ -108,6 +108,8 @@ class Gui:
           self.show_dialog_open_picture_file()
         elif self.menu_bar.choice_index==(4,1):
           self.show_dialog_scale_selection()
+        elif self.menu_bar.choice_index==(4,2):
+          self.show_dialog_copy_selection()
         elif self.menu_bar.choice_index==(2,0):
           self.show_dialog_open_map_file()
         elif self.menu_bar.choice_index==(2,1):
@@ -186,6 +188,36 @@ class Gui:
     window.rect.center=(self.game.map.display_area_rect.center[0],self.game.map.display_area_rect.center[1])
     for widget in widgets:
       window.add(widget)
+    widgets[-1].callbackArgs=(window,)
+    self.add_window(window)
+    
+  def display_dialog_yes_or_no(self,text_list,on_ok_callback):
+    width=0
+    position_x=50
+    position_y=50
+    widgets=[]
+    for text in text_list:
+      widgets.append(FunnyGUI.label.Label(text=text))
+      widgets[-1].rect.topleft=(position_x,position_y)
+      width=max(width,widgets[-1].rect.width)
+      position_y+=self.text_line_height
+    position_y+=10
+    widgets.append(FunnyGUI.button.Button(text="Yes",onClickCallback=on_ok_callback,normalColor=(255,255,255,255),highlightedColor=(255,255,0,255)))
+    widgets.append(FunnyGUI.button.Button(text="No",onClickCallback=self.remove_window,normalColor=(255,255,255,255),highlightedColor=(255,255,0,255)))
+    width=max(width,widgets[-1].rect.width+40+widgets[-2].rect.width)
+    width=width+(2*50)
+    widgets[-2].rect.topright=(int((width/2)-20),position_y)
+    widgets[-1].rect.topleft=(int((width/2)+20),position_y)
+    height=position_y+50
+    if width>self.game.map.display_area_rect.width:
+      width=self.game.map.display_area_rect.width
+    if height>self.game.map.display_area_rect.height:
+      height=self.game.map.display_area_rect.height
+    window=FunnyGUI.window.Window(width=width,height=height,backgroundColor=self.window_message_background_color)
+    window.rect.center=(self.game.map.display_area_rect.center[0],self.game.map.display_area_rect.center[1])
+    for widget in widgets:
+      window.add(widget)
+    widgets[-2].callbackArgs=(window,)
     widgets[-1].callbackArgs=(window,)
     self.add_window(window)
     
@@ -601,3 +633,19 @@ class Gui:
   def confirm_dialog_load_game(self,window,path):
     self.remove_window(window)
     self.game.savegame.load(path)
+    
+  def show_dialog_copy_selection(self):
+    number_of_selected_pictures=self.game.pictures.get_number_of_selected_pictures()
+    beginning=""
+    if number_of_selected_pictures==0:
+      self.display_message_window(["No pictures selected."])
+      return
+    elif number_of_selected_pictures==1:
+      beginning="1 picture"
+    else:
+      beginning="{0} pictures".format(number_of_selected_pictures)
+    self.display_dialog_yes_or_no(["{0} will be copied.".format(beginning),"Do you want to proceed?"],self.confirm_dialog_copy_selection)
+    
+  def confirm_dialog_copy_selection(self,window):
+    self.remove_window(window)
+    self.game.pictures.copy_selected_pictures()

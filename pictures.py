@@ -137,3 +137,18 @@ class Pictures:
   def scale_selected_pictures(self,scale):
     for picture in self.pictures_selected.sprites():
       picture.scale_images(scale)
+    
+  def copy_selected_pictures(self):
+    if self.pictures_selected.sprites():
+      left=self.game.map.display_area_rect.width
+      right=0
+      top=self.game.map.display_area_rect.height
+      bottom=0
+      for pic in self.pictures_selected.sprites():
+        left=min(left,pic.rect.left)
+        right=max(right,pic.rect.right)
+        top=min(top,pic.rect.top)
+        bottom=max(bottom,pic.rect.bottom)
+      center=(int(left+((right-left)/2.0)),int(top+((bottom-top)/2.0)))
+      for pic in self.pictures_selected.sprites():
+        self.open_picture_file(pic.path,pic.get_layer(),pic.scale,self.game.map.display_area_rect.center[0]-(center[0]-pic.rect.center[0]),self.game.map.display_area_rect.center[1]-(center[1]-pic.rect.center[1]))
