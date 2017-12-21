@@ -43,7 +43,7 @@ class Gui:
     self.font_size_buttons_ok_cancel=20
     self.text_line_height=30
     self.text_paragraphs_distance_height=50
-    self.savegame_filename_user_part_max_length=10
+    self.savegame_filename_user_part_max_length=30
     self.force_everything_to_draw=False
     self.create_gui()
 
