@@ -128,7 +128,7 @@ class Picture(pygame.sprite.Sprite):
     self.rect.center=pos
   
   def scale_images(self,scale):
-    self.scale=float(scale)/100.0# convert from percent
+    self.scale=float(scale)
     position=self.rect.center
     self.create_images()
     self.rect.center=position
