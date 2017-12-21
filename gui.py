@@ -159,11 +159,14 @@ class Gui:
     self.container_widgets_FunnyGUI.append(window)
     self.FunnyGUI_dialogs_stealing_focus.append(window)
     self.force_everything_to_draw=True
+    self.game.map.do_not_interact_with_map=True
   
   def remove_window(self,window):
     self.container_widgets_FunnyGUI.remove(window)
     self.FunnyGUI_dialogs_stealing_focus.remove(window)
     self.force_everything_to_draw=True
+    if len(self.FunnyGUI_dialogs_stealing_focus)==0:
+      self.game.map.do_not_interact_with_map=False
     
   def display_message_window(self,text_list):
     width=0

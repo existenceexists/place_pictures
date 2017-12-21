@@ -45,8 +45,11 @@ class Map:
     self.scale=1.0
     self.image=None
     self.rect=None
+    self.do_not_interact_with_map=False
     
   def update(self,event):
+    if self.do_not_interact_with_map:
+      return False
     return_value=False
     self.moving=False
     self.movement=[0,0]
