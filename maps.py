@@ -141,4 +141,13 @@ class Map:
     self.image.blit(image,rect)
     self.rect.left=position_x
     self.rect.top=position_y
+    # do not allow map image to not fill the whole screen
+    if self.rect.left>0:
+      self.rect.left=0
+    if self.rect.right<self.display_area_rect_top_zero.right:
+      self.rect.right=self.display_area_rect_top_zero.right
+    if self.rect.top>0:
+      self.rect.top=0
+    if self.rect.bottom<self.display_area_rect_top_zero.bottom:
+      self.rect.bottom=self.display_area_rect_top_zero.bottom
     self.draw()
