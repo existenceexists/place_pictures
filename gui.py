@@ -313,17 +313,15 @@ class Gui:
     widgets.append(FunnyGUI.label.Label(text="""Picture will be moved into layer with the given number."""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y+=self.text_line_height
-    top_layer=self.game.pictures.get_number_of_layers()
+    top_layer=self.game.pictures.pictures_all.get_top_layer()
     if top_layer==0:
-      top_layer=1
-    if top_layer==1:
-      widgets.append(FunnyGUI.label.Label(text="""Currently the number can be only number 1 ."""))
+      widgets.append(FunnyGUI.label.Label(text="""Currently the number can be only number 0 ."""))
     else:
-      widgets.append(FunnyGUI.label.Label(text="""The number can be an integer number between 1 and {0} .""".format(str(top_layer))))
+      widgets.append(FunnyGUI.label.Label(text="""The number can be an integer number in range 0 and {0} .""".format(str(top_layer))))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y+=self.text_line_height
     input_box_layer=FunnyGUI.inputbox.InputBox()
-    input_box_layer.SetText("1")
+    input_box_layer.SetText(str(top_layer))
     widgets.append(input_box_layer)
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y+=self.text_paragraphs_distance_height
@@ -353,10 +351,8 @@ class Gui:
     try:
       assert(self.is_integer(layer))
       layer=int(layer)
-      assert(layer>=1)
-      number_of_layers=self.game.pictures.get_number_of_layers()
-      if number_of_layers>0:
-        assert(layer<=self.game.pictures.get_number_of_layers())
+      assert(layer>=0)
+      assert(layer<=self.game.pictures.pictures_all.get_top_layer())
     except AssertionError:
       self.display_message_window(["You have not filled layer number field correctly."])
       return
@@ -716,7 +712,7 @@ class Gui:
     widgets.append(FunnyGUI.label.Label(text="""Move selected pictures into new layer."""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y+=self.text_line_height
-    widgets.append(FunnyGUI.label.Label(text="""Specify a layer after that the new layer will be created:"""))
+    widgets.append(FunnyGUI.label.Label(text="""Specify a layer after that the new layer will be inserted:"""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y+=self.text_line_height
     widgets.append(FunnyGUI.label.Label(text="""E.g. if you give number 2, the new layer will have number 3."""))
