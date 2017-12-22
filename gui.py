@@ -725,7 +725,7 @@ class Gui:
     widgets.append(FunnyGUI.label.Label(text="""If you give -1, the new layer will be the first layer, i.e. number 0."""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y+=self.text_line_height
-    widgets.append(FunnyGUI.label.Label(text="""You can give an integer number in range -1 and {0}""".format(str(self.game.pictures.get_number_of_layers()-1))))
+    widgets.append(FunnyGUI.label.Label(text="""You can give an integer number in range -1 and {0}""".format(str(self.game.pictures.pictures_all.get_top_layer()))))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y+=self.text_line_height
     input_box_layer_number=FunnyGUI.inputbox.InputBox()
@@ -751,7 +751,7 @@ class Gui:
       assert(self.is_integer(layer_number))
       layer_number=int(layer_number)
       assert(layer_number>=-1)
-      assert(layer_number<=(self.game.pictures.get_number_of_layers()-1))
+      assert(layer_number<=self.game.pictures.pictures_all.get_top_layer())
     except AssertionError:
       self.display_message_window(["You have not filled the layer number field correctly."])
       return
