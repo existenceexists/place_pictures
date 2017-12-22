@@ -23,6 +23,7 @@
 """
 
 import pygame
+import ntpath
 
 
 class Picture(pygame.sprite.Sprite):
@@ -30,6 +31,7 @@ class Picture(pygame.sprite.Sprite):
   def __init__(self,path,layer,scale,center_x,center_y):
     pygame.sprite.Sprite.__init__(self)
     self.path=path
+    self.filename=self.path_leaf(path)
     self.set_layer(layer)
     self.scale=float(scale)
     self.is_highlighted=False
@@ -132,3 +134,7 @@ class Picture(pygame.sprite.Sprite):
     position=self.rect.center
     self.create_images()
     self.rect.center=position
+    
+  def path_leaf(self,path):
+    head, tail = ntpath.split(path)
+    return tail or ntpath.basename(head)

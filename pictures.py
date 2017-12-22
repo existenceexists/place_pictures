@@ -59,14 +59,17 @@ class Pictures:
             pictures_list[-1].highlight()
             self.picture_highlighted.empty()
             self.picture_highlighted.add(pictures_list[-1])
+            self.game.gui.set_label_highlighted()
             return_value=True
         else:
             pictures_list[-1].highlight()
             self.picture_highlighted.add(pictures_list[-1])
+            self.game.gui.set_label_highlighted()
             return_value=True
       elif self.picture_highlighted.sprite:
             self.picture_highlighted.sprite.unhighlight()
             self.picture_highlighted.empty()
+            self.game.gui.set_label_highlighted()
             return_value=True
     elif event.type==pygame.MOUSEBUTTONUP:
       pictures_list=pygame.sprite.spritecollide(self.game.mouse,self.pictures_to_display,False)
@@ -77,6 +80,7 @@ class Pictures:
           pictures_list[-1].select()
           self.pictures_selected.empty()
           self.pictures_selected.add(pictures_list[-1])
+          self.game.gui.set_label_selected()
           return_value=True
       elif self.pictures_selected.sprites():
         self.selected_pictures_go_to(event.pos)
@@ -89,10 +93,12 @@ class Pictures:
               pictures_list[-1].highlight()
               self.picture_highlighted.empty()
               self.picture_highlighted.add(pictures_list[-1])
+              self.game.gui.set_label_highlighted()
               return_value=True
           else:
               pictures_list[-1].highlight()
               self.picture_highlighted.add(pictures_list[-1])
+              self.game.gui.set_label_highlighted()
               return_value=True
     return return_value
     
@@ -137,6 +143,8 @@ class Pictures:
   def scale_selected_pictures(self,scale):
     for picture in self.pictures_selected.sprites():
       picture.scale_images(scale)
+    self.game.gui.set_label_selected()
+    self.game.gui.set_label_highlighted()
     
   def copy_selected_pictures(self):
     if self.pictures_selected.sprites():
@@ -166,3 +174,5 @@ class Pictures:
       self.pictures_all.change_layer(picture,layer_number)
       if picture in self.pictures_to_display.sprites():
         self.pictures_to_display.change_layer(picture,layer_number)
+    self.game.gui.set_label_selected()
+    self.game.gui.set_label_highlighted()

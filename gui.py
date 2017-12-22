@@ -44,8 +44,8 @@ class Gui:
     self.text_line_height=30
     self.text_paragraphs_distance_height=50
     self.savegame_filename_user_part_max_length=30
-    self.force_everything_to_draw=False
     self.create_gui()
+    self.force_everything_to_draw=True
 
   def create_gui(self):
     # based on exemple.py in MenuSystem package, the comments are in French
@@ -70,16 +70,13 @@ class Gui:
     #~ création de la barre
     self.menu_bar=FunnyMenuSystem.MenuSystem.MenuBar()
     self.menu_bar.set((self.menu_game,self.menu_picture,self.menu_map,self.menu_select,self.menu_selection,self.menu_layer))
-    #menu_bar_rect=self.menu_bar.set((self.menu_game,self.menu_picture,self.menu_select,self.menu_selection,self.menu_layer,self.menu_map))
-    #self.widgets_MenuSystem_to_draw_basic.append([self.game.screen.subsurface(menu_bar_rect).copy(),menu_bar_rect])
-    #self.widgets_MenuSystem_to_draw.append([self.game.screen.subsurface(menu_bar_rect).copy(),menu_bar_rect])
     
-    #self.label_selected_pictures_count=label.Label('pictures:  0',(200,200,200,255),(80,80,80,80))
-    #self.label_selected_pictures_count.set_topright_position((990,60))
-    #self.widgets_container.append(self.label_selected_pictures_count)
-    #self.label_selected_picture_types_count=label.Label('types:  0',(200,200,200,255),(80,80,80,80))
-    #self.label_selected_picture_types_count.set_topright_position((990,90))
-    #self.widgets_container.append(self.label_selected_picture_types_count)
+    self.label_selected=FunnyGUI.label.Label(text="selected: 0")
+    self.label_selected.rect.center=(int(self.game.map.display_area_rect.width/2.0),int(self.game.map.display_area_rect.height-40))
+    self.container_widgets_FunnyGUI.append(self.label_selected)
+    self.label_highlighted=FunnyGUI.label.Label(text="highlighted: 0")
+    self.label_highlighted.rect.center=(int(self.game.map.display_area_rect.width/2.0),int(self.game.map.display_area_rect.height-80))
+    self.container_widgets_FunnyGUI.append(self.label_highlighted)
     
   def update(self, event):
     return_value=False
@@ -100,6 +97,10 @@ class Gui:
       if self.menu_bar.choice:
         if self.menu_bar.choice_index==(0,7):
           self.game.exit()
+        elif self.menu_bar.choice_index==(0,1):
+          self.turn_on_info_bar()
+        elif self.menu_bar.choice_index==(0,2):
+          self.turn_off_info_bar()
         elif self.menu_bar.choice_index==(0,3):
           self.show_dialog_save_game()
         elif self.menu_bar.choice_index==(0,4):
@@ -170,6 +171,51 @@ class Gui:
     if len(self.FunnyGUI_dialogs_stealing_focus)==0:
       self.game.map.do_not_interact_with_map=False
     
+  def turn_on_info_bar(self):
+    if not self.label_selected in self.container_widgets_FunnyGUI:
+      self.container_widgets_FunnyGUI.append(self.label_selected)
+      self.set_label_selected()
+      self.force_everything_to_draw=True
+    if not self.label_highlighted in self.container_widgets_FunnyGUI:
+      self.container_widgets_FunnyGUI.append(self.label_highlighted)
+      self.set_label_highlighted()
+      self.force_everything_to_draw=True
+    
+  def turn_off_info_bar(self):
+    if self.label_selected in self.container_widgets_FunnyGUI:
+      self.container_widgets_FunnyGUI.remove(self.label_selected)
+      self.force_everything_to_draw=True
+    if self.label_highlighted in self.container_widgets_FunnyGUI:
+      self.container_widgets_FunnyGUI.remove(self.label_highlighted)
+      self.force_everything_to_draw=True
+  
+  def set_label_selected(self):
+    text=""
+    pictures_selected=self.game.pictures.pictures_selected.sprites()
+    count=len(pictures_selected)
+    if count==0:
+      text="selected: none"
+    elif count==1:
+      text="selected: 1: {0} , scale: {1}% , layer: {2}".format(pictures_selected[-1].filename,pictures_selected[-1].scale*100.0,self.game.pictures.pictures_all.get_layer_of_sprite(pictures_selected[-1]))
+    elif count>1:
+      layers_list=[]
+      for picture in pictures_selected:
+        l=self.game.pictures.pictures_all.get_layer_of_sprite(picture)
+        if not l in layers_list:
+          layers_list.append(l)
+      text="selected: {0} , layers: {1}".format(count,repr(layers_list))
+    self.label_selected.SetText(text)
+    self.label_selected.rect.center=(int(self.game.map.display_area_rect.width/2.0),int(self.game.map.display_area_rect.height-40))
+  
+  def set_label_highlighted(self):
+    text=""
+    if self.game.pictures.picture_highlighted.sprite:
+      text="highlighted: {0} , scale: {1}% , layer: {2}".format(self.game.pictures.picture_highlighted.sprite.filename,self.game.pictures.picture_highlighted.sprite.scale*100.0,self.game.pictures.pictures_all.get_layer_of_sprite(self.game.pictures.picture_highlighted.sprite))
+    else:
+      text="highlighted: none"
+    self.label_highlighted.SetText(text)
+    self.label_highlighted.rect.center=(int(self.game.map.display_area_rect.width/2.0),int(self.game.map.display_area_rect.height-80))
+    
   def display_message_window(self,text_list):
     width=0
     position_x=50
@@ -225,7 +271,7 @@ class Gui:
     widgets[-2].callbackArgs=(window,)
     widgets[-1].callbackArgs=(window,)
     self.add_window(window)
-    
+  
   def show_dialog_open_picture_file(self):
     path_to_picture_to_open=FunnyPathGetter.PathGetter.get()
     try:

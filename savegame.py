@@ -102,5 +102,7 @@ class Savegame():
           else:
             self.game.gui.display_message_window(["An error occured when loading game.","File",path,"line {0}".format(lines_count)])
             return
+        self.game.gui.set_label_selected()
+        self.game.gui.set_label_highlighted()
     except IOError:
       self.game.gui.display_message_window(["The selected file could not been opened."])
