@@ -161,6 +161,22 @@ class Pictures:
       for pic in self.pictures_selected.sprites():
         self.open_picture_file(pic.path,pic.get_layer(),pic.scale,self.game.map.display_area_rect.center[0]-(center[0]-pic.rect.center[0]),self.game.map.display_area_rect.center[1]-(center[1]-pic.rect.center[1]))
   
+  def remove_empty_layers(self):
+    nonempty_layers=[]
+    for layer in self.pictures_all.layers():
+      if len(self.pictures_all.get_sprites_from_layer(layer))>0:
+        nonempty_layers.append(layer)
+    if (len(nonempty_layers)-1)==self.pictures_all.get_top_layer():
+      return
+    l=0
+    for layer in nonempty_layers:
+      if layer>l:
+        self.pictures_all.switch_layer(layer,l)
+      l+=1
+    pictures_all=pygame.sprite.LayeredUpdates()
+    pictures_all.add(self.pictures_all.sprites())
+    self.pictures_all=pictures_all
+  
   def move_selected_to_new_layer(self,layer_number):
     layer_number+=1
     for layer in reversed(self.pictures_all.layers()):
@@ -174,5 +190,6 @@ class Pictures:
       self.pictures_all.change_layer(picture,layer_number)
       if picture in self.pictures_to_display.sprites():
         self.pictures_to_display.change_layer(picture,layer_number)
+    self.remove_empty_layers()
     self.game.gui.set_label_selected()
     self.game.gui.set_label_highlighted()
