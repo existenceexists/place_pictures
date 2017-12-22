@@ -152,3 +152,17 @@ class Pictures:
       center=(int(left+((right-left)/2.0)),int(top+((bottom-top)/2.0)))
       for pic in self.pictures_selected.sprites():
         self.open_picture_file(pic.path,pic.get_layer(),pic.scale,self.game.map.display_area_rect.center[0]-(center[0]-pic.rect.center[0]),self.game.map.display_area_rect.center[1]-(center[1]-pic.rect.center[1]))
+  
+  def move_selected_to_new_layer(self,layer_number):
+    layer_number+=1
+    for layer in reversed(self.pictures_all.layers()):
+      if layer>=layer_number:
+        new_layer=layer+1
+        for picture in self.pictures_all.get_sprites_from_layer(layer):
+          self.pictures_all.change_layer(picture,new_layer)
+          if picture in self.pictures_to_display.sprites():
+            self.pictures_to_display.change_layer(picture,new_layer)
+    for picture in self.pictures_selected.sprites():
+      self.pictures_all.change_layer(picture,layer_number)
+      if picture in self.pictures_to_display.sprites():
+        self.pictures_to_display.change_layer(picture,layer_number)

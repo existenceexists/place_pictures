@@ -44,10 +44,10 @@ class Picture(pygame.sprite.Sprite):
     surface.blit(self.image,self.rect)
   
   def set_layer(self,layer):
-    self._layer=layer
+    self.layer=layer
   
   def get_layer(self):
-    return self._layer
+    return self.layer
   
   def move_by(self,movement_x,movement_y):
     self.rect.center=(self.rect.center[0]+movement_x,self.rect.center[1]+movement_y)

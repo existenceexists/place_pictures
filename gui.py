@@ -106,14 +106,16 @@ class Gui:
           self.show_dialog_load_game()
         elif self.menu_bar.choice_index==(1,0):
           self.show_dialog_open_picture_file()
-        elif self.menu_bar.choice_index==(4,1):
-          self.show_dialog_scale_selection()
-        elif self.menu_bar.choice_index==(4,2):
-          self.show_dialog_copy_selection()
         elif self.menu_bar.choice_index==(2,0):
           self.show_dialog_open_map_file()
         elif self.menu_bar.choice_index==(2,1):
           self.show_dialog_create_map()
+        elif self.menu_bar.choice_index==(4,1):
+          self.show_dialog_scale_selection()
+        elif self.menu_bar.choice_index==(4,2):
+          self.show_dialog_copy_selection()
+        elif self.menu_bar.choice_index==(5,1):
+          self.show_dialog_new_layer()
     for widget in self.container_widgets_FunnyGUI:
       if widget.update(event):
         return_value=True
@@ -573,7 +575,7 @@ class Gui:
     widgets.append(input_box_filename_part)
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y+=self.text_paragraphs_distance_height
-    widgets.append(FunnyGUI.button.Button(text="OK",onClickCallback=self.confirm_dialog_save_file,fontSize=self.font_size_buttons_ok_cancel))
+    widgets.append(FunnyGUI.button.Button(text="OK",onClickCallback=self.confirm_dialog_save_game,fontSize=self.font_size_buttons_ok_cancel))
     widgets[-1].rect.topright=((width/2)-20,position_y)
     widgets.append(FunnyGUI.button.Button(text="Cancel",onClickCallback=self.remove_window,fontSize=self.font_size_buttons_ok_cancel))
     widgets[-1].rect.topleft=((width/2)+20,position_y)
@@ -586,7 +588,7 @@ class Gui:
     widgets[-2].callbackArgs=(window,input_box_filename_part)
     self.add_window(window)
     
-  def confirm_dialog_save_file(self,window,input_box_filename_part):
+  def confirm_dialog_save_game(self,window,input_box_filename_part):
     filename_user_part=input_box_filename_part.GetText()
     try:
       assert(len(filename_user_part)<=self.savegame_filename_user_part_max_length)
@@ -652,3 +654,60 @@ class Gui:
   def confirm_dialog_copy_selection(self,window):
     self.remove_window(window)
     self.game.pictures.copy_selected_pictures()
+  
+  def show_dialog_new_layer(self):
+    number_of_selected_pictures=self.game.pictures.get_number_of_selected_pictures()
+    if number_of_selected_pictures==0:
+      self.display_message_window(["No pictures selected."])
+      return
+    width=580
+    position_x=50
+    position_y=50
+    widgets=[]
+    widgets.append(FunnyGUI.label.Label(text="""New layer"""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_paragraphs_distance_height
+    widgets.append(FunnyGUI.label.Label(text="""Move selected pictures into new layer."""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_line_height
+    widgets.append(FunnyGUI.label.Label(text="""Specify a layer after that the new layer will be created:"""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_line_height
+    widgets.append(FunnyGUI.label.Label(text="""E.g. if you give number 2, the new layer will have number 3."""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_line_height
+    widgets.append(FunnyGUI.label.Label(text="""If you give -1, the new layer will be the first layer, i.e. number 0."""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_line_height
+    widgets.append(FunnyGUI.label.Label(text="""You can give an integer number in range -1 and {0}""".format(str(self.game.pictures.get_number_of_layers()-1))))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_line_height
+    input_box_layer_number=FunnyGUI.inputbox.InputBox()
+    widgets.append(input_box_layer_number)
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_paragraphs_distance_height
+    widgets.append(FunnyGUI.button.Button(text="OK",onClickCallback=self.confirm_dialog_new_layer,fontSize=self.font_size_buttons_ok_cancel))
+    widgets[-1].rect.topright=((width/2)-20,position_y)
+    widgets.append(FunnyGUI.button.Button(text="Cancel",onClickCallback=self.remove_window,fontSize=self.font_size_buttons_ok_cancel))
+    widgets[-1].rect.topleft=((width/2)+20,position_y)
+    height=position_y+70
+    window=FunnyGUI.window.Window(width=width,height=height,backgroundColor=self.window_background_color)
+    window.rect.center=(self.game.map.display_area_rect.center[0],self.game.map.display_area_rect.center[1])
+    for widget in widgets:
+      window.add(widget)
+    widgets[-1].callbackArgs=(window,)
+    widgets[-2].callbackArgs=(window,input_box_layer_number)
+    self.add_window(window)
+    
+  def confirm_dialog_new_layer(self,window,input_box_layer_number):
+    layer_number=input_box_layer_number.GetText()
+    try:
+      assert(self.is_integer(layer_number))
+      layer_number=int(layer_number)
+      assert(layer_number>=-1)
+      assert(layer_number<=(self.game.pictures.get_number_of_layers()-1))
+    except AssertionError:
+      self.display_message_window(["You have not filled the layer number field correctly."])
+      return
+    self.remove_window(window)
+    self.game.pictures.move_selected_to_new_layer(layer_number)
