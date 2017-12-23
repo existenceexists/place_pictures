@@ -62,7 +62,7 @@ class Savegame():
         displayed="n"
         if picture in self.game.pictures.pictures_to_display:
           displayed="d"
-        line="%picture;{0};{1};{2};{3};{4};{5};{6};\n".format(picture.path,picture.get_layer(),picture.scale,picture.rect.center[0]-self.game.map.rect.left,picture.rect.center[1]-self.game.map.rect.top,selected,displayed)
+        line="%picture;{0};{1};{2};{3};{4};{5};{6};\n".format(picture.path,self.game.pictures.pictures_all.get_layer_of_sprite(picture),picture.scale,picture.rect.center[0]-self.game.map.rect.left,picture.rect.center[1]-self.game.map.rect.top,selected,displayed)
         f.write(line)
     
   def load(self,path):
