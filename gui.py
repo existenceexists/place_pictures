@@ -112,6 +112,10 @@ class Gui:
           self.show_dialog_open_map_file()
         elif self.menu_bar.choice_index==(2,1):
           self.show_dialog_create_map()
+        elif self.menu_bar.choice_index==(3,0):
+          self.turn_on_multiple_selection()
+        elif self.menu_bar.choice_index==(3,1):
+          self.turn_off_multiple_selection()
         elif self.menu_bar.choice_index==(4,1):
           self.show_dialog_scale_selection()
         elif self.menu_bar.choice_index==(4,2):
@@ -807,3 +811,9 @@ class Gui:
       return
     self.remove_window(window)
     self.game.pictures.move_selected_to_layer(layer_number)
+  
+  def turn_on_multiple_selection(self):
+    self.game.pictures.turn_on_multiple_selection()
+  
+  def turn_off_multiple_selection(self):
+    self.game.pictures.turn_off_multiple_selection()

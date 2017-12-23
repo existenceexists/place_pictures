@@ -33,6 +33,7 @@ class Pictures:
   def __init__(self,game):
     self.game=game
     self.do_not_interact_with_pictures=False
+    self.is_multiple_selection_on=False
     self.pictures_all=pygame.sprite.LayeredUpdates()
     self.pictures_to_display=pygame.sprite.LayeredUpdates()
     self.pictures_selected=pygame.sprite.LayeredUpdates()
@@ -74,12 +75,18 @@ class Pictures:
     elif event.type==pygame.MOUSEBUTTONUP:
       pictures_list=pygame.sprite.spritecollide(self.game.mouse,self.pictures_to_display,False)
       if pictures_list:
-        if pictures_list!=self.pictures_selected.sprites():
-          for picture in self.pictures_selected.sprites():
-            picture.unselect()
+        if not pictures_list[-1] in self.pictures_selected.sprites():
+          if not self.is_multiple_selection_on:
+            for picture in self.pictures_selected.sprites():
+              picture.unselect()
+            self.pictures_selected.empty()
           pictures_list[-1].select()
-          self.pictures_selected.empty()
           self.pictures_selected.add(pictures_list[-1])
+          self.game.gui.set_label_selected()
+          return_value=True
+        else:
+          pictures_list[-1].unselect()
+          self.pictures_selected.remove(pictures_list[-1])
           self.game.gui.set_label_selected()
           return_value=True
       elif self.pictures_selected.sprites():
@@ -139,6 +146,12 @@ class Pictures:
   
   def get_number_of_selected_pictures(self):
     return len(self.pictures_selected.sprites())
+  
+  def turn_on_multiple_selection(self):
+    self.is_multiple_selection_on=True
+  
+  def turn_off_multiple_selection(self):
+    self.is_multiple_selection_on=False
   
   def scale_selected_pictures(self,scale):
     for picture in self.pictures_selected.sprites():
