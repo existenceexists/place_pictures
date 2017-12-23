@@ -712,7 +712,7 @@ class Gui:
     widgets.append(FunnyGUI.label.Label(text="""New layer"""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y+=self.text_paragraphs_distance_height
-    widgets.append(FunnyGUI.label.Label(text="""Move selected pictures into new layer."""))
+    widgets.append(FunnyGUI.label.Label(text="""Move {0} selected pictures into new layer.""".format(str(number_of_selected_pictures))))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y+=self.text_line_height
     widgets.append(FunnyGUI.label.Label(text="""Specify a layer after that the new layer will be inserted:"""))
