@@ -207,3 +207,13 @@ class Pictures:
     self.remove_empty_layers()
     self.game.gui.set_label_selected()
     self.game.gui.set_label_highlighted()
+  
+  def move_selected_to_layer(self,layer_number):
+    for picture in self.pictures_selected.sprites():
+      picture.set_layer(layer_number)
+      self.pictures_all.change_layer(picture,layer_number)
+      self.pictures_to_display.change_layer(picture,layer_number)
+      self.pictures_selected.change_layer(picture,layer_number)
+    self.remove_empty_layers()
+    self.game.gui.set_label_selected()
+    self.game.gui.set_label_highlighted()
