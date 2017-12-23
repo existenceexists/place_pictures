@@ -140,7 +140,7 @@ class Pictures:
         bottom=max(bottom,pic.rect.bottom)
       center=(int(left+((right-left)/2.0)),int(top+((bottom-top)/2.0)))
       for pic in self.pictures_selected.sprites():
-        pic.rect.center=(position[0]+(center[0]-pic.rect.center[0]),position[1]+(center[1]-pic.rect.center[1]))
+        pic.rect.center=(position[0]-(center[0]-pic.rect.center[0]),position[1]-(center[1]-pic.rect.center[1]))
     
   def get_number_of_layers(self):
     return len(self.pictures_all.layers())
