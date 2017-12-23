@@ -132,6 +132,8 @@ class Gui:
           self.show_dialog_move_selection_to_layer()
         elif self.menu_bar.choice_index==(4,5):
           self.deselect_selected()
+        elif self.menu_bar.choice_index==(4,6):
+          self.delete_selected()
         elif self.menu_bar.choice_index==(5,1):
           self.show_dialog_new_layer()
     for widget in self.container_widgets_FunnyGUI:
@@ -868,3 +870,14 @@ class Gui:
       self.display_message_window(["Invalid selection to achieve this task.","Only pictures sharing common scale should be already selected.","Try to deselect selected pictures and select only one picture and try again."])
       return
     self.game.pictures.select_same_file_and_scale()
+  
+  def delete_selected(self):
+    number_of_selected_pictures=self.game.pictures.get_number_of_selected_pictures()
+    if number_of_selected_pictures==0:
+      self.display_message_window(["No picture selected."])
+      return
+    self.display_dialog_yes_or_no(["Delete selected pictures?","{0} pictures will be deleted.".format(number_of_selected_pictures),"Do you want to proceed?"],self.confirm_dialog_delete_selected)
+  
+  def confirm_dialog_delete_selected(self,window):
+    self.remove_window(window)
+    self.game.pictures.delete_selected()

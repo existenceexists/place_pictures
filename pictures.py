@@ -183,6 +183,16 @@ class Pictures:
         self.pictures_selected.add(picture)
     self.game.gui.set_label_selected()
   
+  def delete_selected(self):
+    for picture in self.pictures_selected.sprites():
+      self.pictures_all.remove(picture)
+      self.pictures_to_display.remove(picture)
+      self.pictures_selected.remove(picture)
+      if picture==self.picture_highlighted.sprite:
+        self.picture_highlighted.remove(picture)
+    self.game.gui.set_label_selected()
+    self.game.gui.set_label_highlighted()
+  
   def scale_selected_pictures(self,scale):
     for picture in self.pictures_selected.sprites():
       picture.scale_images(scale)
