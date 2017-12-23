@@ -120,6 +120,8 @@ class Gui:
           self.turn_off_selecting()
         elif self.menu_bar.choice_index==(3,3):
           self.turn_on_selecting()
+        elif self.menu_bar.choice_index==(3,6):
+          self.select_same_file()
         elif self.menu_bar.choice_index==(4,1):
           self.show_dialog_scale_selection()
         elif self.menu_bar.choice_index==(4,2):
@@ -832,3 +834,16 @@ class Gui:
   
   def deselect_selected(self):
     self.game.pictures.deselect_selected()
+  
+  def select_same_file(self):
+    if self.game.pictures.get_number_of_selected_pictures()==0:
+      self.display_message_window(["No picture selected."])
+      return
+    paths=[]
+    for picture in self.game.pictures.pictures_selected.sprites():
+      if picture.path not in paths:
+        paths.append(picture.path)
+    if len(paths)>1:
+      self.display_message_window(["Invalid selection to achieve this task.","Only pictures sharing common image file should be selected.","Try to deselect selected pictures and select only one picture."])
+      return
+    self.game.pictures.select_same_file()

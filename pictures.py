@@ -166,6 +166,14 @@ class Pictures:
     self.pictures_selected.empty()
     self.game.gui.set_label_selected()
   
+  def select_same_file(self):
+    path=self.pictures_selected.sprites()[-1].path
+    for picture in self.pictures_to_display.sprites():
+      if picture.path==path:
+        picture.select()
+        self.pictures_selected.add(picture)
+    self.game.gui.set_label_selected()
+  
   def scale_selected_pictures(self,scale):
     for picture in self.pictures_selected.sprites():
       picture.scale_images(scale)
