@@ -126,6 +126,8 @@ class Gui:
           self.show_dialog_copy_selection()
         elif self.menu_bar.choice_index==(4,3):
           self.show_dialog_move_selection_to_layer()
+        elif self.menu_bar.choice_index==(4,5):
+          self.deselect_selected()
         elif self.menu_bar.choice_index==(5,1):
           self.show_dialog_new_layer()
     for widget in self.container_widgets_FunnyGUI:
@@ -827,3 +829,6 @@ class Gui:
   
   def turn_off_selecting(self):
     self.game.pictures.turn_off_selecting()
+  
+  def deselect_selected(self):
+    self.game.pictures.deselect_selected()

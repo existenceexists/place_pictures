@@ -159,6 +159,12 @@ class Pictures:
   
   def turn_off_selecting(self):
     self.is_selecting_on=False
+
+  def deselect_selected(self):
+    for picture in self.pictures_selected.sprites():
+      picture.unselect()
+    self.pictures_selected.empty()
+    self.game.gui.set_label_selected()
   
   def scale_selected_pictures(self,scale):
     for picture in self.pictures_selected.sprites():
