@@ -281,7 +281,7 @@ class Gui:
       pass
     if not path_to_picture_to_open:
       return
-    self.create_dialog_open_picture_file(path_to_picture_to_open)
+    self.create_dialog_open_picture_file(os.path.relpath(path_to_picture_to_open))
   
   def create_dialog_open_picture_file(self,path_to_picture_to_open):
     width=580
@@ -368,7 +368,7 @@ class Gui:
       pass
     if not path_to_picture_to_open:
       return
-    self.create_dialog_open_map_file(path_to_picture_to_open)
+    self.create_dialog_open_map_file(os.path.relpath(path_to_picture_to_open))
   
   def create_dialog_open_map_file(self,path_to_picture_to_open):
     width=580
@@ -642,14 +642,14 @@ class Gui:
     self.game.savegame.save(filename_user_part)
     
   def show_dialog_load_game(self):
-    path=FunnyPathGetter.PathGetter.get(path=self.game.savegame.savegames_directory_path,mode=1,caption="Open savegame file")
+    path=FunnyPathGetter.PathGetter.get(path=self.game.savegame.savegames_directory_path_absolute,mode=1,caption="Open savegame file")
     try:
       path=path.decode("utf-8")
     except AttributeError:
       pass
     if not path:
       return
-    self.create_dialog_load_game(path)
+    self.create_dialog_load_game(os.path.relpath(path))
   
   def create_dialog_load_game(self,path):
     width=580
