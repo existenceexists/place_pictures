@@ -22,6 +22,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+import os
 import pygame
 
 import FunnyGUI
@@ -273,7 +274,7 @@ class Gui:
     self.add_window(window)
   
   def show_dialog_open_picture_file(self):
-    path_to_picture_to_open=FunnyPathGetter.PathGetter.get()
+    path_to_picture_to_open=FunnyPathGetter.PathGetter.get(mode=1,caption="Open picture file")
     try:
       path_to_picture_to_open=path_to_picture_to_open.decode("utf-8")
     except AttributeError:
@@ -360,7 +361,7 @@ class Gui:
     self.game.pictures.open_picture_file(path_to_picture_to_open,layer,scale/100.0,self.game.map.display_area_rect_top_zero.center[0],self.game.map.display_area_rect_top_zero.center[1])
     
   def show_dialog_open_map_file(self):
-    path_to_picture_to_open=FunnyPathGetter.PathGetter.get()
+    path_to_picture_to_open=FunnyPathGetter.PathGetter.get(mode=1,caption="Open background image file")
     try:
       path_to_picture_to_open=path_to_picture_to_open.decode("utf-8")
     except AttributeError:
@@ -641,7 +642,7 @@ class Gui:
     self.game.savegame.save(filename_user_part)
     
   def show_dialog_load_game(self):
-    path=FunnyPathGetter.PathGetter.get()
+    path=FunnyPathGetter.PathGetter.get(path=self.game.savegame.savegames_directory_path,mode=1,caption="Open savegame file")
     try:
       path=path.decode("utf-8")
     except AttributeError:

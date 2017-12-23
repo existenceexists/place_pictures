@@ -31,6 +31,7 @@ class Savegame():
   def __init__(self,game):
     self.game=game
     self.directory_savegames="savegames"
+    self.savegames_directory_path=os.path.join(os.getcwd(),self.directory_savegames)
     self.timestamp_format="%Y-%m-%d_%H-%M-%S_%Z"
     self.filename_template="savegame.{0}{1}.save"
     
