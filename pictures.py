@@ -159,7 +159,7 @@ class Pictures:
         bottom=max(bottom,pic.rect.bottom)
       center=(int(left+((right-left)/2.0)),int(top+((bottom-top)/2.0)))
       for pic in self.pictures_selected.sprites():
-        self.open_picture_file(pic.path,pic.get_layer(),pic.scale,self.game.map.display_area_rect.center[0]-(center[0]-pic.rect.center[0]),self.game.map.display_area_rect.center[1]-(center[1]-pic.rect.center[1]))
+        self.open_picture_file(pic.path,self.pictures_all.get_layer_of_sprite(pic),pic.scale,self.game.map.display_area_rect.center[0]-(center[0]-pic.rect.center[0]),self.game.map.display_area_rect.center[1]-(center[1]-pic.rect.center[1]))
   
   def remove_empty_layers(self):
     nonempty_layers=[]
@@ -172,24 +172,38 @@ class Pictures:
     for layer in nonempty_layers:
       if layer>l:
         self.pictures_all.switch_layer(layer,l)
+        self.pictures_to_display.switch_layer(layer,l)
+        self.pictures_selected.switch_layer(layer,l)
       l+=1
     pictures_all=pygame.sprite.LayeredUpdates()
     pictures_all.add(self.pictures_all.sprites())
     self.pictures_all=pictures_all
+    pictures_to_display=pygame.sprite.LayeredUpdates()
+    pictures_to_display.add(self.pictures_to_display.sprites())
+    self.pictures_to_display=pictures_to_display
+    pictures_selected=pygame.sprite.LayeredUpdates()
+    pictures_selected.add(self.pictures_selected.sprites())
+    self.pictures_selected=pictures_selected
   
-  def move_selected_to_new_layer(self,layer_number):
-    layer_number+=1
+  def move_selected_to_new_layer(self,after_layer_number):
+    new_layer=after_layer_number+1
     for layer in reversed(self.pictures_all.layers()):
-      if layer>=layer_number:
-        new_layer=layer+1
+      if layer>=new_layer:
+        layer_move=layer+1
         for picture in self.pictures_all.get_sprites_from_layer(layer):
-          self.pictures_all.change_layer(picture,new_layer)
+          picture.set_layer(layer_move)
+          self.pictures_all.change_layer(picture,layer_move)
           if picture in self.pictures_to_display.sprites():
-            self.pictures_to_display.change_layer(picture,new_layer)
+            self.pictures_to_display.change_layer(picture,layer_move)
+          if picture in self.pictures_selected.sprites():
+            self.pictures_selected.change_layer(picture,layer_move)
     for picture in self.pictures_selected.sprites():
-      self.pictures_all.change_layer(picture,layer_number)
+      picture.set_layer(new_layer)
+      self.pictures_all.change_layer(picture,new_layer)
       if picture in self.pictures_to_display.sprites():
-        self.pictures_to_display.change_layer(picture,layer_number)
+        self.pictures_to_display.change_layer(picture,new_layer)
+      if picture in self.pictures_selected.sprites():
+        self.pictures_selected.change_layer(picture,new_layer)
     self.remove_empty_layers()
     self.game.gui.set_label_selected()
     self.game.gui.set_label_highlighted()
