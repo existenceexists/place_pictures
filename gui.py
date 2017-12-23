@@ -96,9 +96,7 @@ class Gui:
       for rect in rect_list:
         self.widgets_MenuSystem_to_draw.append([self.game.screen.subsurface(rect).copy(),rect])
       if self.menu_bar.choice:
-        if self.menu_bar.choice_index==(0,7):
-          self.game.exit()
-        elif self.menu_bar.choice_index==(0,1):
+        if self.menu_bar.choice_index==(0,1):
           self.turn_on_info_bar()
         elif self.menu_bar.choice_index==(0,2):
           self.turn_off_info_bar()
@@ -106,6 +104,8 @@ class Gui:
           self.show_dialog_save_game()
         elif self.menu_bar.choice_index==(0,4):
           self.show_dialog_load_game()
+        elif self.menu_bar.choice_index==(0,7):
+          self.game.exit()
         elif self.menu_bar.choice_index==(1,0):
           self.show_dialog_open_picture_file()
         elif self.menu_bar.choice_index==(2,0):
@@ -120,6 +120,8 @@ class Gui:
           self.turn_off_selecting()
         elif self.menu_bar.choice_index==(3,3):
           self.turn_on_selecting()
+        elif self.menu_bar.choice_index==(3,5):
+          self.select_same_file_and_scale()
         elif self.menu_bar.choice_index==(3,6):
           self.select_same_file()
         elif self.menu_bar.choice_index==(4,1):
@@ -847,3 +849,22 @@ class Gui:
       self.display_message_window(["Invalid selection to achieve this task.","Only pictures sharing common image file should be selected.","Try to deselect selected pictures and select only one picture."])
       return
     self.game.pictures.select_same_file()
+  
+  def select_same_file_and_scale(self):
+    if self.game.pictures.get_number_of_selected_pictures()==0:
+      self.display_message_window(["No picture selected."])
+      return
+    paths=[]
+    scalings=[]
+    for picture in self.game.pictures.pictures_selected.sprites():
+      if picture.path not in paths:
+        paths.append(picture.path)
+      if picture.scale not in scalings:
+        scalings.append(picture.scale)
+    if len(paths)>1:
+      self.display_message_window(["Invalid selection to achieve this task.","Only pictures sharing common image file should be already selected.","Try to deselect selected pictures and select only one picture and try again."])
+      return
+    if len(scalings)>1:
+      self.display_message_window(["Invalid selection to achieve this task.","Only pictures sharing common scale should be already selected.","Try to deselect selected pictures and select only one picture and try again."])
+      return
+    self.game.pictures.select_same_file_and_scale()
