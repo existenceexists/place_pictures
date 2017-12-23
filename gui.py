@@ -116,6 +116,10 @@ class Gui:
           self.turn_on_multiple_selection()
         elif self.menu_bar.choice_index==(3,1):
           self.turn_off_multiple_selection()
+        elif self.menu_bar.choice_index==(3,2):
+          self.turn_off_selecting()
+        elif self.menu_bar.choice_index==(3,3):
+          self.turn_on_selecting()
         elif self.menu_bar.choice_index==(4,1):
           self.show_dialog_scale_selection()
         elif self.menu_bar.choice_index==(4,2):
@@ -817,3 +821,9 @@ class Gui:
   
   def turn_off_multiple_selection(self):
     self.game.pictures.turn_off_multiple_selection()
+  
+  def turn_on_selecting(self):
+    self.game.pictures.turn_on_selecting()
+  
+  def turn_off_selecting(self):
+    self.game.pictures.turn_off_selecting()

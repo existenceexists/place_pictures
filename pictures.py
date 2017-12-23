@@ -34,6 +34,7 @@ class Pictures:
     self.game=game
     self.do_not_interact_with_pictures=False
     self.is_multiple_selection_on=False
+    self.is_selecting_on=True
     self.pictures_all=pygame.sprite.LayeredUpdates()
     self.pictures_to_display=pygame.sprite.LayeredUpdates()
     self.pictures_selected=pygame.sprite.LayeredUpdates()
@@ -74,7 +75,7 @@ class Pictures:
             return_value=True
     elif event.type==pygame.MOUSEBUTTONUP:
       pictures_list=pygame.sprite.spritecollide(self.game.mouse,self.pictures_to_display,False)
-      if pictures_list:
+      if pictures_list and self.is_selecting_on:
         if not pictures_list[-1] in self.pictures_selected.sprites():
           if not self.is_multiple_selection_on:
             for picture in self.pictures_selected.sprites():
@@ -152,6 +153,12 @@ class Pictures:
   
   def turn_off_multiple_selection(self):
     self.is_multiple_selection_on=False
+  
+  def turn_on_selecting(self):
+    self.is_selecting_on=True
+  
+  def turn_off_selecting(self):
+    self.is_selecting_on=False
   
   def scale_selected_pictures(self,scale):
     for picture in self.pictures_selected.sprites():
