@@ -64,7 +64,7 @@ class Gui:
     self.menu_game = FunnyMenuSystem.MenuSystem.Menu('game', ('info','turn on info','turn off info','save','load','new','export as image','exit'))
     self.menu_picture = FunnyMenuSystem.MenuSystem.Menu('picture', ('open file',))
     self.menu_map = FunnyMenuSystem.MenuSystem.Menu('map',('open file','create','scale with pictures ','scale without pictures'))
-    self.menu_select = FunnyMenuSystem.MenuSystem.Menu('select',('start multi selection','end multi selection','disable selecting','enable selecting','within layers','same file and scale','same file','layers','all on screen','all','by name'))
+    self.menu_select = FunnyMenuSystem.MenuSystem.Menu('select',('start multi selection','end multi selection','disable selecting','enable selecting','within layers','turn off within layers','same file and scale','same file','layers','all on screen','all','by name'))
     self.menu_selection = FunnyMenuSystem.MenuSystem.Menu('selection', ('info','scale','copy','move to layer','give a name','deselect','delete'))
     self.menu_layer = FunnyMenuSystem.MenuSystem.Menu('layers', ('info','new','move','join','display'))
     
@@ -120,9 +120,13 @@ class Gui:
           self.turn_off_selecting()
         elif self.menu_bar.choice_index==(3,3):
           self.turn_on_selecting()
+        elif self.menu_bar.choice_index==(3,4):
+          self.show_dialog_select_within_layers()
         elif self.menu_bar.choice_index==(3,5):
-          self.select_same_file_and_scale()
+          self.turn_off_within_layers()
         elif self.menu_bar.choice_index==(3,6):
+          self.select_same_file_and_scale()
+        elif self.menu_bar.choice_index==(3,7):
           self.select_same_file()
         elif self.menu_bar.choice_index==(4,1):
           self.show_dialog_scale_selection()
@@ -176,6 +180,32 @@ class Gui:
       return False
     else:
       return True
+  
+  def make_list_of_layers(self,layers):
+    layers_list=[]
+    layers=layers.split(",")
+    for la in layers:
+      l=la.split("-")
+      if len(l)==1:
+        assert(self.is_integer(l[0]))
+        layers_list.append(int(l[0]))
+      elif len(l)==2:
+        assert(self.is_integer(l[0]))
+        assert(self.is_integer(l[1]))
+        l=[int(l[0]),int(l[1])]
+        assert(l[0]<(l[1]-1))
+        layers_list.extend(range(l[0],(l[1]+1)))
+      else:
+        raise AssertionError
+    # Sort the list
+    layers_list=sorted(layers_list)
+    # Check if list is unique:
+    l_list=[]
+    for l in layers_list:
+      if l in l_list:
+        raise AssertionError
+      l_list.append(l)
+    return layers_list
   
   def add_window(self,window):
     self.container_widgets_FunnyGUI.append(window)
@@ -881,3 +911,54 @@ class Gui:
   def confirm_dialog_delete_selected(self,window):
     self.remove_window(window)
     self.game.pictures.delete_selected()
+  
+  def show_dialog_select_within_layers(self):
+    width=580
+    position_x=50
+    position_y=50
+    widgets=[]
+    widgets.append(FunnyGUI.label.Label(text="""Select only within given layers"""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_paragraphs_distance_height
+    widgets.append(FunnyGUI.label.Label(text="""Limit selectable and highlightable pictures to pictures within specified layers."""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_line_height
+    widgets.append(FunnyGUI.label.Label(text="""Specify layers to that selecting will be limited:"""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_line_height
+    widgets.append(FunnyGUI.label.Label(text="""You can give an integer numbers or ranges in range 0 and {0}""".format(str(self.game.pictures.pictures_all.get_top_layer()))))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_line_height
+    widgets.append(FunnyGUI.label.Label(text="""Example: 1,3-5,7"""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_line_height
+    input_box_layers=FunnyGUI.inputbox.InputBox()
+    widgets.append(input_box_layers)
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_paragraphs_distance_height
+    widgets.append(FunnyGUI.button.Button(text="OK",onClickCallback=self.confirm_dialog_select_within_layers,fontSize=self.font_size_buttons_ok_cancel))
+    widgets[-1].rect.topright=((width/2)-20,position_y)
+    widgets.append(FunnyGUI.button.Button(text="Cancel",onClickCallback=self.remove_window,fontSize=self.font_size_buttons_ok_cancel))
+    widgets[-1].rect.topleft=((width/2)+20,position_y)
+    height=position_y+70
+    window=FunnyGUI.window.Window(width=width,height=height,backgroundColor=self.window_background_color)
+    window.rect.center=(self.game.map.display_area_rect.center[0],self.game.map.display_area_rect.center[1])
+    for widget in widgets:
+      window.add(widget)
+    widgets[-1].callbackArgs=(window,)
+    widgets[-2].callbackArgs=(window,input_box_layers)
+    self.add_window(window)
+    
+  def confirm_dialog_select_within_layers(self,window,input_box_layers):
+    layers=input_box_layers.GetText()
+    try:
+      layers=self.make_list_of_layers(layers)
+      assert(layers[-1]<=self.game.pictures.pictures_all.get_top_layer())
+    except AssertionError:
+      self.display_message_window(["You have not filled the layers list and ranges of layers field correctly."])
+      return
+    self.remove_window(window)
+    self.game.pictures.set_selecting_within_layers(layers)
+  
+  def turn_off_within_layers(self):
+    self.game.pictures.unset_selecting_within_layers()

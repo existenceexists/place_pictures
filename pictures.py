@@ -35,6 +35,8 @@ class Pictures:
     self.do_not_interact_with_pictures=False
     self.is_multiple_selection_on=False
     self.is_selecting_on=True
+    self.is_set_within_layers=False
+    self.within_layers=[]
     self.pictures_all=pygame.sprite.LayeredUpdates()
     self.pictures_to_display=pygame.sprite.LayeredUpdates()
     self.pictures_selected=pygame.sprite.LayeredUpdates()
@@ -54,7 +56,7 @@ class Pictures:
       self.game.mouse.update(event)
     if event.type==pygame.MOUSEMOTION:
       pictures_list=pygame.sprite.spritecollide(self.game.mouse,self.pictures_to_display,False)
-      if pictures_list:
+      if pictures_list and (not self.is_set_within_layers or (self.is_set_within_layers and self.pictures_all.get_layer_of_sprite(pictures_list[-1]) in self.within_layers)):
         if self.picture_highlighted.sprite:
           if pictures_list[-1]!=self.picture_highlighted.sprite:
             self.picture_highlighted.sprite.unhighlight()
@@ -75,7 +77,7 @@ class Pictures:
             return_value=True
     elif event.type==pygame.MOUSEBUTTONUP:
       pictures_list=pygame.sprite.spritecollide(self.game.mouse,self.pictures_to_display,False)
-      if pictures_list and self.is_selecting_on:
+      if pictures_list and self.is_selecting_on and (not self.is_set_within_layers or (self.is_set_within_layers and self.pictures_all.get_layer_of_sprite(pictures_list[-1]) in self.within_layers)):
         if not pictures_list[-1] in self.pictures_selected.sprites():
           if not self.is_multiple_selection_on:
             for picture in self.pictures_selected.sprites():
@@ -159,6 +161,14 @@ class Pictures:
   
   def turn_off_selecting(self):
     self.is_selecting_on=False
+  
+  def set_selecting_within_layers(self,layers):
+    self.is_set_within_layers=True
+    self.within_layers=layers
+  
+  def unset_selecting_within_layers(self):
+    self.is_set_within_layers=False
+    self.within_layers=[]
 
   def deselect_selected(self):
     for picture in self.pictures_selected.sprites():
