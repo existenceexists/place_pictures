@@ -294,6 +294,8 @@ class Pictures:
         layers_new_order.remove(None)
       else:
         break
+    if layers_new_order==self.pictures_all.layers():
+      return
     pictures_all=pygame.sprite.LayeredUpdates()
     pictures_to_display=pygame.sprite.LayeredUpdates()
     pictures_selected=pygame.sprite.LayeredUpdates()
