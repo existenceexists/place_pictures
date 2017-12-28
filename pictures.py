@@ -247,7 +247,7 @@ class Pictures:
     pictures_selected=pygame.sprite.LayeredUpdates()
     pictures_selected.add(self.pictures_selected.sprites())
     self.pictures_selected=pictures_selected
-  
+   
   def move_selected_to_new_layer(self,after_layer_number):
     new_layer=after_layer_number+1
     for layer in reversed(self.pictures_all.layers()):
@@ -278,5 +278,46 @@ class Pictures:
       self.pictures_to_display.change_layer(picture,layer_number)
       self.pictures_selected.change_layer(picture,layer_number)
     self.remove_empty_layers()
+    self.game.gui.set_label_selected()
+    self.game.gui.set_label_highlighted()
+  
+  def move_layers(self,layers_to_move,insert_after_layer):
+    where_to_be_moved=insert_after_layer+1
+    layers_new_order=self.pictures_all.layers()
+    for layer in layers_to_move:
+      layers_new_order[layer]=None
+    for layer in layers_to_move:
+      layers_new_order.insert(where_to_be_moved,layer)
+      where_to_be_moved+=1
+    while True:
+      if None in layers_new_order:
+        layers_new_order.remove(None)
+      else:
+        break
+    pictures_all=pygame.sprite.LayeredUpdates()
+    pictures_to_display=pygame.sprite.LayeredUpdates()
+    pictures_selected=pygame.sprite.LayeredUpdates()
+    l=0
+    for layer in layers_new_order:
+      pictures=self.pictures_all.remove_sprites_of_layer(layer)
+      if layer==l:
+        for picture in pictures:
+          pictures_all.add(picture,layer=l)
+          if picture in self.pictures_to_display.sprites():
+            pictures_to_display.add(picture,layer=l)
+          if picture in self.pictures_selected.sprites():
+            pictures_selected.add(picture,layer=l)
+      else:
+        for picture in pictures:
+          picture.set_layer(l)
+          pictures_all.add(picture,layer=l)
+          if picture in self.pictures_to_display.sprites():
+            pictures_to_display.add(picture,layer=l)
+          if picture in self.pictures_selected.sprites():
+            pictures_selected.add(picture,layer=l)
+      l+=1
+    self.pictures_all=pictures_all
+    self.pictures_to_display=pictures_to_display
+    self.pictures_selected=pictures_selected
     self.game.gui.set_label_selected()
     self.game.gui.set_label_highlighted()

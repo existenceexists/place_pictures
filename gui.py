@@ -140,6 +140,8 @@ class Gui:
           self.delete_selected()
         elif self.menu_bar.choice_index==(5,1):
           self.show_dialog_new_layer()
+        elif self.menu_bar.choice_index==(5,2):
+          self.show_dialog_move_layers()
     for widget in self.container_widgets_FunnyGUI:
       if widget.update(event):
         return_value=True
@@ -926,7 +928,7 @@ class Gui:
     widgets.append(FunnyGUI.label.Label(text="""Specify layers to that selecting will be limited:"""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y+=self.text_line_height
-    widgets.append(FunnyGUI.label.Label(text="""You can give an integer numbers or ranges in range 0 and {0}""".format(str(self.game.pictures.pictures_all.get_top_layer()))))
+    widgets.append(FunnyGUI.label.Label(text="""You can give comma separated integer numbers or ranges in range 0 and {0}""".format(str(self.game.pictures.pictures_all.get_top_layer()))))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y+=self.text_line_height
     widgets.append(FunnyGUI.label.Label(text="""Example: 1,3-5,7"""))
@@ -962,3 +964,71 @@ class Gui:
   
   def turn_off_within_layers(self):
     self.game.pictures.unset_selecting_within_layers()
+  
+  def show_dialog_move_layers(self):
+    width=580
+    position_x=50
+    position_y=50
+    widgets=[]
+    widgets.append(FunnyGUI.label.Label(text="""Move layers"""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_paragraphs_distance_height
+    widgets.append(FunnyGUI.label.Label(text="""Move one or more layers to position after a specified layer."""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_line_height
+    widgets.append(FunnyGUI.label.Label(text="""Specify layers to move:"""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_line_height
+    widgets.append(FunnyGUI.label.Label(text="""You can give comma separated integer numbers or ranges in range 0 and {0}""".format(str(self.game.pictures.pictures_all.get_top_layer()))))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_line_height
+    widgets.append(FunnyGUI.label.Label(text="""Example: 1,3-5,7"""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_line_height
+    input_box_layers_to_move=FunnyGUI.inputbox.InputBox()
+    widgets.append(input_box_layers_to_move)
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_paragraphs_distance_height
+    widgets.append(FunnyGUI.label.Label(text="""Specify layer after that layers to be moved will be inserted:"""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_line_height
+    widgets.append(FunnyGUI.label.Label(text="""You can give integer number in range -1 and {0}""".format(str(self.game.pictures.pictures_all.get_top_layer()))))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_line_height
+    input_box_where_to_be_moved=FunnyGUI.inputbox.InputBox()
+    widgets.append(input_box_where_to_be_moved)
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_paragraphs_distance_height
+    widgets.append(FunnyGUI.button.Button(text="OK",onClickCallback=self.confirm_dialog_move_layers,fontSize=self.font_size_buttons_ok_cancel))
+    widgets[-1].rect.topright=((width/2)-20,position_y)
+    widgets.append(FunnyGUI.button.Button(text="Cancel",onClickCallback=self.remove_window,fontSize=self.font_size_buttons_ok_cancel))
+    widgets[-1].rect.topleft=((width/2)+20,position_y)
+    height=position_y+70
+    window=FunnyGUI.window.Window(width=width,height=height,backgroundColor=self.window_background_color)
+    window.rect.center=(self.game.map.display_area_rect.center[0],self.game.map.display_area_rect.center[1])
+    for widget in widgets:
+      window.add(widget)
+    widgets[-1].callbackArgs=(window,)
+    widgets[-2].callbackArgs=(window,input_box_layers_to_move,input_box_where_to_be_moved)
+    self.add_window(window)
+    
+  def confirm_dialog_move_layers(self,window,input_box_layers_to_move,input_box_where_to_be_moved):
+    layers_to_move=input_box_layers_to_move.GetText()
+    try:
+      layers_to_move=self.make_list_of_layers(layers_to_move)
+      assert(layers_to_move[-1]>=0)
+      assert(layers_to_move[-1]<=self.game.pictures.pictures_all.get_top_layer())
+    except AssertionError:
+      self.display_message_window(["You have not filled the layers to move list and ranges of layers to move field correctly."])
+      return
+    where_to_be_moved=input_box_where_to_be_moved.GetText()
+    try:
+      assert(self.is_integer(where_to_be_moved))
+      where_to_be_moved=int(where_to_be_moved)
+      assert(where_to_be_moved>=-1)
+      assert(where_to_be_moved<=self.game.pictures.pictures_all.get_top_layer())
+    except AssertionError:
+      self.display_message_window(["You have not filled the where to move field correctly."])
+      return
+    self.remove_window(window)
+    self.game.pictures.move_layers(layers_to_move,where_to_be_moved)
