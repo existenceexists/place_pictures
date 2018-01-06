@@ -121,13 +121,13 @@ class Pictures:
        picture.move_by(movement_x,movement_y)
   
   def open_picture_file(self,path,layer,scale,center_x,center_y,select=False,display=True):
-    pic=picture.Picture(path,layer,scale,center_x,center_y)
-    self.pictures_all.add(pic)
+    pic=picture.Picture(path,scale,center_x,center_y)
+    self.pictures_all.add(pic,layer=layer)
     if select:
       pic.select()
-      self.pictures_selected.add(pic)
+      self.pictures_selected.add(pic,layer=layer)
     if display:
-      self.pictures_to_display.add(pic)
+      self.pictures_to_display.add(pic,layer=layer)
     
   def selected_pictures_go_to(self,position):
     if self.pictures_selected.sprites():
@@ -232,6 +232,8 @@ class Pictures:
     for l in range(len(layers_new_order)):
       if not l in layers_old and l in layers_new_order:
         layers_new_order.remove(l)
+    # now we have layers_new_order e.g. [0,1,"n",2,3]
+    # so we move pictures according to this layer model
     pictures_all=pygame.sprite.LayeredUpdates()
     pictures_to_display=pygame.sprite.LayeredUpdates()
     pictures_selected=pygame.sprite.LayeredUpdates()
@@ -244,22 +246,12 @@ class Pictures:
             pictures_to_display.add(picture,layer=l)
           pictures_selected.add(picture,layer=l)
       else:
-        pictures=self.pictures_all.remove_sprites_of_layer(layer)
-        if layer==l:
-          for picture in pictures:
-            pictures_all.add(picture,layer=l)
-            if picture in self.pictures_to_display.sprites():
-              pictures_to_display.add(picture,layer=l)
-            if picture in self.pictures_selected.sprites():
-              pictures_selected.add(picture,layer=l)
-        else:
-          for picture in pictures:
-            picture.set_layer(l)
-            pictures_all.add(picture,layer=l)
-            if picture in self.pictures_to_display.sprites():
-              pictures_to_display.add(picture,layer=l)
-            if picture in self.pictures_selected.sprites():
-              pictures_selected.add(picture,layer=l)
+        for picture in self.pictures_all.remove_sprites_of_layer(layer):
+          pictures_all.add(picture,layer=l)
+          if picture in self.pictures_to_display.sprites():
+            pictures_to_display.add(picture,layer=l)
+          if picture in self.pictures_selected.sprites():
+            pictures_selected.add(picture,layer=l)
       l+=1
     self.pictures_all=pictures_all
     self.pictures_to_display=pictures_to_display
@@ -270,7 +262,6 @@ class Pictures:
   def move_selected_to_layer(self,layer_number):
     layers_old_order=self.pictures_all.layers()
     for picture in self.pictures_selected.sprites():
-      picture.set_layer(layer_number)
       self.pictures_all.remove(picture)
       self.pictures_all.add(picture,layer=layer_number)
       self.pictures_selected.remove(picture)
@@ -280,30 +271,24 @@ class Pictures:
         self.pictures_to_display.add(picture,layer=layer_number)
     layers_new_order=self.pictures_all.layers()
     if layers_old_order==layers_new_order:
+      # now we have layers_new_order e.g. [0,1,2] and that is OK
+      # so we don't need to do anything more with pictures
       self.game.gui.set_label_selected()
       self.game.gui.set_label_highlighted()
       return
+    # now we have layers_new_order e.g. [0,1,3] but instead we want [0,1,2]
+    # so we move pictures according to the desired layer model
     pictures_all=pygame.sprite.LayeredUpdates()
     pictures_to_display=pygame.sprite.LayeredUpdates()
     pictures_selected=pygame.sprite.LayeredUpdates()
     l=0
     for layer in layers_new_order:
-      pictures=self.pictures_all.remove_sprites_of_layer(layer)
-      if layer==l:
-        for picture in pictures:
-          pictures_all.add(picture,layer=l)
-          if picture in self.pictures_to_display.sprites():
-            pictures_to_display.add(picture,layer=l)
-          if picture in self.pictures_selected.sprites():
-            pictures_selected.add(picture,layer=l)
-      else:
-        for picture in pictures:
-          picture.set_layer(l)
-          pictures_all.add(picture,layer=l)
-          if picture in self.pictures_to_display.sprites():
-            pictures_to_display.add(picture,layer=l)
-          if picture in self.pictures_selected.sprites():
-            pictures_selected.add(picture,layer=l)
+      for picture in self.pictures_all.remove_sprites_of_layer(layer):
+        pictures_all.add(picture,layer=l)
+        if picture in self.pictures_to_display.sprites():
+          pictures_to_display.add(picture,layer=l)
+        if picture in self.pictures_selected.sprites():
+          pictures_selected.add(picture,layer=l)
       l+=1
     self.pictures_all=pictures_all
     self.pictures_to_display=pictures_to_display
@@ -331,22 +316,12 @@ class Pictures:
     pictures_selected=pygame.sprite.LayeredUpdates()
     l=0
     for layer in layers_new_order:
-      pictures=self.pictures_all.remove_sprites_of_layer(layer)
-      if layer==l:
-        for picture in pictures:
-          pictures_all.add(picture,layer=l)
-          if picture in self.pictures_to_display.sprites():
-            pictures_to_display.add(picture,layer=l)
-          if picture in self.pictures_selected.sprites():
-            pictures_selected.add(picture,layer=l)
-      else:
-        for picture in pictures:
-          picture.set_layer(l)
-          pictures_all.add(picture,layer=l)
-          if picture in self.pictures_to_display.sprites():
-            pictures_to_display.add(picture,layer=l)
-          if picture in self.pictures_selected.sprites():
-            pictures_selected.add(picture,layer=l)
+      for picture in self.pictures_all.remove_sprites_of_layer(layer):
+        pictures_all.add(picture,layer=l)
+        if picture in self.pictures_to_display.sprites():
+          pictures_to_display.add(picture,layer=l)
+        if picture in self.pictures_selected.sprites():
+          pictures_selected.add(picture,layer=l)
       l+=1
     self.pictures_all=pictures_all
     self.pictures_to_display=pictures_to_display

@@ -28,11 +28,10 @@ import ntpath
 
 class Picture(pygame.sprite.Sprite):
   
-  def __init__(self,path,layer,scale,center_x,center_y):
+  def __init__(self,path,scale,center_x,center_y):
     pygame.sprite.Sprite.__init__(self)
     self.path=path
     self.filename=self.path_leaf(path)
-    self.set_layer(layer)
     self.scale=float(scale)
     self.is_highlighted=False
     self.is_selected=False
@@ -44,12 +43,6 @@ class Picture(pygame.sprite.Sprite):
   
   def draw(self,surface):
     surface.blit(self.image,self.rect)
-  
-  def set_layer(self,layer):
-    self._layer=layer
-  
-  def get_layer(self):
-    return self._layer
   
   def move_by(self,movement_x,movement_y):
     self.rect.center=(self.rect.center[0]+movement_x,self.rect.center[1]+movement_y)
