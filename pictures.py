@@ -143,6 +143,16 @@ class Pictures:
       center=(int(left+((right-left)/2.0)),int(top+((bottom-top)/2.0)))
       for pic in self.pictures_selected.sprites():
         pic.rect.center=(position[0]-(center[0]-pic.rect.center[0]),position[1]-(center[1]-pic.rect.center[1]))
+      # if a picture's center is outside map borders, move the picture's center on the border
+      for pic in self.pictures_selected.sprites():
+        if pic.rect.center[0]<self.game.map.rect.left:
+          pic.rect.center=(self.game.map.rect.left+1,pic.rect.center[1])
+        if pic.rect.center[1]<self.game.map.rect.top:
+          pic.rect.center=(pic.rect.center[0],self.game.map.rect.top+1)
+        if pic.rect.center[0]>self.game.map.rect.right:
+          pic.rect.center=(self.game.map.rect.right-1,pic.rect.center[1])
+        if pic.rect.center[1]>self.game.map.rect.bottom:
+          pic.rect.center=(pic.rect.center[0],self.game.map.rect.bottom-1)
     
   def get_number_of_layers(self):
     return len(self.pictures_all.layers())
