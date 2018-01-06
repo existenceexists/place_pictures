@@ -118,7 +118,7 @@ class Pictures:
     
   def move_all_pictures_by(self,movement_x,movement_y):
     for picture in self.pictures_all:
-       picture.move_by(movement_x,movement_y)
+      picture.move_by(movement_x,movement_y)
   
   def open_picture_file(self,path,layer,scale,center_x,center_y,select=False,display=True):
     pic=picture.Picture(path,scale,center_x,center_y)
@@ -233,7 +233,7 @@ class Pictures:
       if not l in layers_old and l in layers_new_order:
         layers_new_order.remove(l)
     # now we have layers_new_order e.g. [0,1,"n",2,3]
-    # so we move pictures according to this layer model
+    # so we move pictures according to layers_new_order layer model
     pictures_all=pygame.sprite.LayeredUpdates()
     pictures_to_display=pygame.sprite.LayeredUpdates()
     pictures_selected=pygame.sprite.LayeredUpdates()
@@ -277,7 +277,7 @@ class Pictures:
       self.game.gui.set_label_highlighted()
       return
     # now we have layers_new_order e.g. [0,1,3] but instead we want [0,1,2]
-    # so we move pictures according to the desired layer model
+    # so we move pictures according to the layers_new_order layer model
     pictures_all=pygame.sprite.LayeredUpdates()
     pictures_to_display=pygame.sprite.LayeredUpdates()
     pictures_selected=pygame.sprite.LayeredUpdates()
@@ -310,7 +310,11 @@ class Pictures:
       else:
         break
     if layers_new_order==self.pictures_all.layers():
+      # now we have layers_new_order e.g. [0,1,2] and that is OK
+      # so we don't need to do anything more with pictures
       return
+    # now we have layers_new_order e.g. [0,2,1] but instead we want [0,1,2]
+    # so we move pictures according to the layers_new_order layer model
     pictures_all=pygame.sprite.LayeredUpdates()
     pictures_to_display=pygame.sprite.LayeredUpdates()
     pictures_selected=pygame.sprite.LayeredUpdates()
