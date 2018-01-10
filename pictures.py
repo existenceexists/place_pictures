@@ -131,10 +131,11 @@ class Pictures:
     
   def selected_pictures_go_to(self,position):
     if self.pictures_selected.sprites():
-      left=self.game.map.display_area_rect.width
-      right=0
-      top=self.game.map.display_area_rect.height
-      bottom=0
+      picture_selected=self.pictures_selected.sprites()[-1]
+      left=picture_selected.rect.left
+      right=picture_selected.rect.right
+      top=picture_selected.rect.top
+      bottom=picture_selected.rect.bottom
       for pic in self.pictures_selected.sprites():
         left=min(left,pic.rect.left)
         right=max(right,pic.rect.right)
