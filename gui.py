@@ -72,10 +72,10 @@ class Gui:
     self.menu_bar=FunnyMenuSystem.MenuSystem.MenuBar()
     self.menu_bar.set((self.menu_game,self.menu_picture,self.menu_map,self.menu_select,self.menu_selection,self.menu_layer))
     
-    self.label_selected=FunnyGUI.label.Label(text="selected: 0")
+    self.label_selected=FunnyGUI.label.Label(text="selected: none")
     self.label_selected.rect.center=(int(self.game.map.display_area_rect.width/2.0),int(self.game.map.display_area_rect.height-40))
     self.container_widgets_FunnyGUI.append(self.label_selected)
-    self.label_highlighted=FunnyGUI.label.Label(text="highlighted: 0")
+    self.label_highlighted=FunnyGUI.label.Label(text="highlighted: none")
     self.label_highlighted.rect.center=(int(self.game.map.display_area_rect.width/2.0),int(self.game.map.display_area_rect.height-80))
     self.container_widgets_FunnyGUI.append(self.label_highlighted)
     
