@@ -364,7 +364,9 @@ class Gui:
     widgets.append(FunnyGUI.label.Label(text="""Picture will be moved into layer with the given number."""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y+=self.text_line_height
-    top_layer=self.game.pictures.pictures_all.get_top_layer()
+    top_layer=0
+    if self.game.pictures.pictures_all.sprites():
+      top_layer=self.game.pictures.pictures_all.get_top_layer()
     if top_layer==0:
       widgets.append(FunnyGUI.label.Label(text="""Currently the number can be only number 0 ."""))
     else:
@@ -403,7 +405,10 @@ class Gui:
       assert(self.is_integer(layer))
       layer=int(layer)
       assert(layer>=0)
-      assert(layer<=self.game.pictures.pictures_all.get_top_layer())
+      top_layer=0
+      if self.game.pictures.pictures_all.sprites():
+        top_layer=self.game.pictures.pictures_all.get_top_layer()
+      assert(layer<=top_layer)
     except AssertionError:
       self.display_message_window(["You have not filled layer number field correctly."])
       return
@@ -772,7 +777,10 @@ class Gui:
     widgets.append(FunnyGUI.label.Label(text="""If you give -1, the new layer will be the first layer, i.e. number 0."""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y+=self.text_line_height
-    widgets.append(FunnyGUI.label.Label(text="""You can give an integer number in range -1 and {0}""".format(str(self.game.pictures.pictures_all.get_top_layer()))))
+    top_layer=0
+    if self.game.pictures.pictures_all.sprites():
+      top_layer=self.game.pictures.pictures_all.get_top_layer()
+    widgets.append(FunnyGUI.label.Label(text="""You can give an integer number in range -1 and {0}""".format(str(top_layer))))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y+=self.text_line_height
     input_box_layer_number=FunnyGUI.inputbox.InputBox()
@@ -798,7 +806,10 @@ class Gui:
       assert(self.is_integer(layer_number))
       layer_number=int(layer_number)
       assert(layer_number>=-1)
-      assert(layer_number<=self.game.pictures.pictures_all.get_top_layer())
+      top_layer=0
+      if self.game.pictures.pictures_all.sprites():
+        top_layer=self.game.pictures.pictures_all.get_top_layer()
+      assert(layer_number<=top_layer)
     except AssertionError:
       self.display_message_window(["You have not filled the layer number field correctly."])
       return
@@ -823,7 +834,10 @@ class Gui:
     widgets.append(FunnyGUI.label.Label(text="""Specify a layer to move the selected pictures to:"""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y+=self.text_line_height
-    widgets.append(FunnyGUI.label.Label(text="""You can give an integer number in range 0 and {0}""".format(str(self.game.pictures.pictures_all.get_top_layer()))))
+    top_layer=0
+    if self.game.pictures.pictures_all.sprites():
+      top_layer=self.game.pictures.pictures_all.get_top_layer()
+    widgets.append(FunnyGUI.label.Label(text="""You can give an integer number in range 0 and {0}""".format(str(top_layer))))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y+=self.text_line_height
     input_box_layer_number=FunnyGUI.inputbox.InputBox()
@@ -849,7 +863,10 @@ class Gui:
       assert(self.is_integer(layer_number))
       layer_number=int(layer_number)
       assert(layer_number>=0)
-      assert(layer_number<=self.game.pictures.pictures_all.get_top_layer())
+      top_layer=0
+      if self.game.pictures.pictures_all.sprites():
+        top_layer=self.game.pictures.pictures_all.get_top_layer()
+      assert(layer_number<=top_layer)
     except AssertionError:
       self.display_message_window(["You have not filled the layer number field correctly."])
       return
@@ -915,6 +932,9 @@ class Gui:
     self.game.pictures.delete_selected()
   
   def show_dialog_select_within_layers(self):
+    if not self.game.pictures.pictures_all.sprites():
+      self.display_message_window(["No layers exist because no pictures are loaded."])
+      return
     width=580
     position_x=50
     position_y=50
@@ -928,7 +948,10 @@ class Gui:
     widgets.append(FunnyGUI.label.Label(text="""Specify layers to that selecting will be limited:"""))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y+=self.text_line_height
-    widgets.append(FunnyGUI.label.Label(text="""You can give comma separated integer numbers or ranges in range 0 and {0}""".format(str(self.game.pictures.pictures_all.get_top_layer()))))
+    top_layer=0
+    if self.game.pictures.pictures_all.sprites():
+      top_layer=self.game.pictures.pictures_all.get_top_layer()
+    widgets.append(FunnyGUI.label.Label(text="""You can give comma separated integer numbers or ranges in range 0 and {0}""".format(str(top_layer))))
     widgets[-1].rect.topleft=(position_x,position_y)
     position_y+=self.text_line_height
     widgets.append(FunnyGUI.label.Label(text="""Example: 1,3-5,7"""))
@@ -955,7 +978,10 @@ class Gui:
     layers=input_box_layers.GetText()
     try:
       layers=self.make_list_of_layers(layers)
-      assert(layers[-1]<=self.game.pictures.pictures_all.get_top_layer())
+      top_layer=0
+      if self.game.pictures.pictures_all.sprites():
+        top_layer=self.game.pictures.pictures_all.get_top_layer()
+      assert(layers[-1]<=top_layer)
     except AssertionError:
       self.display_message_window(["You have not filled the layers list and ranges of layers field correctly."])
       return
@@ -966,6 +992,9 @@ class Gui:
     self.game.pictures.unset_selecting_within_layers()
   
   def show_dialog_move_layers(self):
+    if not self.game.pictures.pictures_all.sprites():
+      self.display_message_window(["No layers exist because no pictures are loaded."])
+      return
     width=580
     position_x=50
     position_y=50
