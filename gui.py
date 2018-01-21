@@ -105,7 +105,7 @@ class Gui:
         elif self.menu_bar.choice_index==(0,4):
           self.show_dialog_load_game()
         elif self.menu_bar.choice_index==(0,7):
-          self.game.exit()
+          self.exit()
         elif self.menu_bar.choice_index==(1,0):
           self.show_dialog_open_picture_file()
         elif self.menu_bar.choice_index==(2,0):
@@ -323,6 +323,13 @@ class Gui:
     widgets[-2].callbackArgs=(window,)
     widgets[-1].callbackArgs=(window,)
     self.add_window(window)
+    
+  def exit(self):
+    self.display_dialog_yes_or_no(["Do you really want to quit?"],self.exit_game)
+    
+  def exit_game(self,window):
+    self.remove_window(window)
+    self.game.exit()
   
   def show_dialog_open_picture_file(self):
     path_to_picture_to_open=FunnyPathGetter.PathGetter.get(mode=1,caption="Open picture file")
