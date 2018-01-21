@@ -254,6 +254,7 @@ class Gui:
         l=self.game.pictures.pictures_all.get_layer_of_sprite(picture)
         if not l in layers_list:
           layers_list.append(l)
+      layers_list.sort()
       text="selected: {0} , layers: {1}".format(count,repr(layers_list))
     self.label_selected.SetText(text)
     self.label_selected.rect.center=(int(self.game.map.display_area_rect.width/2.0),int(self.game.map.display_area_rect.height-40))
