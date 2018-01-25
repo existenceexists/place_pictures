@@ -343,3 +343,38 @@ class Pictures:
     self.pictures_selected=pictures_selected
     self.game.gui.set_label_selected()
     self.game.gui.set_label_highlighted()
+  
+  def join_layers(self,layers_to_join):
+    layers_new_order=self.pictures_all.layers()
+    layers_new_order[layers_new_order.index(layers_to_join[0])]="+".join(map(str,layers_to_join))
+    for layer in list(layers_new_order):
+      if layer in layers_to_join:
+        layers_new_order.remove(layer)
+    # Now we have list of layers in the form e.g. [0,1,2,"3+4+5+6",7,8]
+    # So join and move layers according to it
+    pictures_all=pygame.sprite.LayeredUpdates()
+    pictures_to_display=pygame.sprite.LayeredUpdates()
+    pictures_selected=pygame.sprite.LayeredUpdates()
+    l=0
+    for layer in layers_new_order:
+      if type(layer) is str:
+        for la in layers_to_join:
+          for picture in self.pictures_all.remove_sprites_of_layer(la):
+            pictures_all.add(picture,layer=l)
+            if picture in self.pictures_to_display.sprites():
+              pictures_to_display.add(picture,layer=l)
+            if picture in self.pictures_selected.sprites():
+              pictures_selected.add(picture,layer=l)
+      else:
+        for picture in self.pictures_all.remove_sprites_of_layer(layer):
+          pictures_all.add(picture,layer=l)
+          if picture in self.pictures_to_display.sprites():
+            pictures_to_display.add(picture,layer=l)
+          if picture in self.pictures_selected.sprites():
+            pictures_selected.add(picture,layer=l)
+      l+=1
+    self.pictures_all=pictures_all
+    self.pictures_to_display=pictures_to_display
+    self.pictures_selected=pictures_selected
+    self.game.gui.set_label_selected()
+    self.game.gui.set_label_highlighted()

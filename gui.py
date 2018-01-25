@@ -142,6 +142,8 @@ class Gui:
           self.show_dialog_new_layer()
         elif self.menu_bar.choice_index==(5,2):
           self.show_dialog_move_layers()
+        elif self.menu_bar.choice_index==(5,3):
+          self.show_dialog_join_layers()
     for widget in self.container_widgets_FunnyGUI:
       if widget.update(event):
         return_value=True
@@ -1069,3 +1071,60 @@ class Gui:
       return
     self.remove_window(window)
     self.game.pictures.move_layers(layers_to_move,where_to_be_moved)
+  
+  def show_dialog_join_layers(self):
+    if not self.game.pictures.pictures_all.sprites():
+      self.display_message_window(["No layers exist because no pictures are loaded."])
+      return
+    width=580
+    position_x=50
+    position_y=50
+    widgets=[]
+    widgets.append(FunnyGUI.label.Label(text="""Join layers"""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_paragraphs_distance_height
+    widgets.append(FunnyGUI.label.Label(text="""Join two or more neighbouring layers."""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_line_height
+    widgets.append(FunnyGUI.label.Label(text="""Specify layers to join:"""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_line_height
+    widgets.append(FunnyGUI.label.Label(text="""You can give comma separated integer numbers or ranges in range 0 and {0}""".format(str(self.game.pictures.pictures_all.get_top_layer()))))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_line_height
+    widgets.append(FunnyGUI.label.Label(text="""Example: 1,2-5,6"""))
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_line_height
+    input_box_layers_to_join=FunnyGUI.inputbox.InputBox()
+    widgets.append(input_box_layers_to_join)
+    widgets[-1].rect.topleft=(position_x,position_y)
+    position_y+=self.text_paragraphs_distance_height
+    widgets.append(FunnyGUI.button.Button(text="OK",onClickCallback=self.confirm_dialog_join_layers,fontSize=self.font_size_buttons_ok_cancel))
+    widgets[-1].rect.topright=((width/2)-20,position_y)
+    widgets.append(FunnyGUI.button.Button(text="Cancel",onClickCallback=self.remove_window,fontSize=self.font_size_buttons_ok_cancel))
+    widgets[-1].rect.topleft=((width/2)+20,position_y)
+    height=position_y+70
+    window=FunnyGUI.window.Window(width=width,height=height,backgroundColor=self.window_background_color)
+    window.rect.center=(self.game.map.display_area_rect.center[0],self.game.map.display_area_rect.center[1])
+    for widget in widgets:
+      window.add(widget)
+    widgets[-1].callbackArgs=(window,)
+    widgets[-2].callbackArgs=(window,input_box_layers_to_join)
+    self.add_window(window)
+    
+  def confirm_dialog_join_layers(self,window,input_box_layers_to_join):
+    layers_to_join=input_box_layers_to_join.GetText()
+    try:
+      layers_to_join=self.make_list_of_layers(layers_to_join)
+      # check if all layers to join are neighbours
+      l=layers_to_join[0]
+      for layer in layers_to_join:
+        assert(layer==l)
+        l+=1
+      assert(layers_to_join[0]>=0)
+      assert(layers_to_join[-1]<=self.game.pictures.pictures_all.get_top_layer())
+    except AssertionError:
+      self.display_message_window(["You have not filled the layers to join field correctly."])
+      return
+    self.remove_window(window)
+    self.game.pictures.join_layers(layers_to_join)
