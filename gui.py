@@ -334,7 +334,7 @@ class Gui:
     self.game.exit()
   
   def show_dialog_open_picture_file(self):
-    path_to_picture_to_open=FunnyPathGetter.PathGetter.get(mode=1,caption="Open picture file")
+    path_to_picture_to_open=FunnyPathGetter.PathGetter.get(mode=1,caption="Open picture file",show_image_preview=True)
     try:
       path_to_picture_to_open=path_to_picture_to_open.decode("utf-8")
     except AttributeError:
@@ -429,7 +429,7 @@ class Gui:
       self.display_message_window(["Error: {0}".format(str(e))])
     
   def show_dialog_open_map_file(self):
-    path_to_picture_to_open=FunnyPathGetter.PathGetter.get(mode=1,caption="Open background image file")
+    path_to_picture_to_open=FunnyPathGetter.PathGetter.get(mode=1,caption="Open background image file",show_image_preview=True)
     try:
       path_to_picture_to_open=path_to_picture_to_open.decode("utf-8")
     except AttributeError:
