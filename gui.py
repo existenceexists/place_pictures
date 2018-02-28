@@ -423,7 +423,10 @@ class Gui:
       self.display_message_window(["You have not filled layer number field correctly."])
       return
     self.remove_window(window)
-    self.game.pictures.open_picture_file(path_to_picture_to_open,layer,scale/100.0,self.game.map.display_area_rect_top_zero.center[0],self.game.map.display_area_rect_top_zero.center[1])
+    try:
+      self.game.pictures.open_picture_file(path_to_picture_to_open,layer,scale/100.0,self.game.map.display_area_rect_top_zero.center[0],self.game.map.display_area_rect_top_zero.center[1])
+    except pygame.error as e:
+      self.display_message_window(["Error: {0}".format(str(e))])
     
   def show_dialog_open_map_file(self):
     path_to_picture_to_open=FunnyPathGetter.PathGetter.get(mode=1,caption="Open background image file")
