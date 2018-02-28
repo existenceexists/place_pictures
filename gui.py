@@ -486,7 +486,10 @@ class Gui:
       self.display_message_window(["You have not filled scale number field correctly."])
       return
     self.remove_window(window)
-    self.game.map.open_image(path_to_picture_to_open,scale/100.0)
+    try:
+      self.game.map.open_image(path_to_picture_to_open,scale/100.0)
+    except pygame.error as e:
+      self.display_message_window(["Error: {0}".format(str(e))])
   
   def show_dialog_create_map(self):
     width=580
