@@ -25,9 +25,9 @@
 import os
 import pygame
 
-import FunnyGUI
-import FunnyMenuSystem
-import FunnyPathGetter
+import lib.FunnyGUI as FunnyGUI
+import lib.FunnyMenuSystem as FunnyMenuSystem
+import lib.FunnyPathGetter as FunnyPathGetter
 
 
 class Gui:

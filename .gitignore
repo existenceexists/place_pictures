@@ -2,9 +2,7 @@
 
 *.py[co]
 
-FunnyGUI/
-FunnyMenuSystem/
-FunnyPathGetter/
 
 .ignore/
 images/
+lib/
