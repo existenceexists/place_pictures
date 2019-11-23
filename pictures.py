@@ -206,7 +206,7 @@ class Pictures:
   
   def scale_selected_pictures(self,scale):
     for picture in self.pictures_selected.sprites():
-      picture.scale_images(scale)
+      picture.scale_image(scale)
     self.game.gui.set_label_selected()
     self.game.gui.set_label_highlighted()
     
