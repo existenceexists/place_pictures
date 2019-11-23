@@ -2,7 +2,3 @@
 
 *.py[co]
 
-
-.ignore/
-images/
-lib/
