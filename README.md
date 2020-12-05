@@ -66,6 +66,11 @@ https://github.com/existenceexists/place_pictures
 sentientfanda@gmail.com
 
 
+## Changes
+
+All notable changes to this project and all released versions will be documented in the file CHANGELOG.md .
+
+
 ## License
 
 Copyright © 2017 František Brožka <sentientfanda@gmail.com>
